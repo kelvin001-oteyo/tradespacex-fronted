@@ -1,0 +1,380 @@
+/* ============================================ */
+/* AUTH (LOGIN & REGISTER) - Custom Styles */
+/* ============================================ */
+
+/* ===== AUTH CONTAINER ===== */
+.auth-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px; /* Increased padding slightly for breathing room */
+  background: linear-gradient(135deg, #f8fafc 0%, #ffffff 40%, #eff6ff 100%);
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  background: #ffffff !important; /* Locked to prevent global color bleeds */
+  border-radius: 20px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+  padding: 32px;
+}
+
+/* ===== LOGO ===== */
+.auth-logo {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.auth-logo .logo-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+}
+
+.auth-logo .logo-icon {
+  position: relative;
+}
+
+.auth-logo .logo-icon .glow {
+  position: absolute;
+  inset: -4px;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(139, 92, 246, 0.3));
+  border-radius: 50%;
+  filter: blur(8px);
+  opacity: 0.5;
+}
+
+.auth-logo .logo-icon .icon {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  background: white;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.auth-logo .logo-text {
+  font-size: 1.5rem;
+  font-weight: 800;
+  background: var(--gradient-primary, linear-gradient(135deg, #2563eb, #7c3aed));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.auth-logo .logo-sub {
+  font-size: 0.875rem;
+  color: var(--gray-500, #64748b);
+  margin-top: 4px;
+}
+
+/* ===== STEPS INDICATOR ===== */
+.steps-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.step-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #e2e8f0;
+  transition: all 0.3s ease;
+}
+
+.step-dot.active {
+  background: var(--primary-500, #2563eb);
+  width: 24px;
+  border-radius: 4px;
+}
+
+.step-dot.completed {
+  background: var(--success-500, #10b981);
+}
+
+/* ===== ACCOUNT TYPE SELECTOR ===== */
+.account-type-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.account-type-card {
+  padding: 24px 16px;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: transparent;
+}
+
+.account-type-card:hover {
+  border-color: #94a3b8;
+  background: #f8fafc;
+}
+
+.account-type-card.selected-buyer {
+  border-color: var(--primary-500, #2563eb);
+  background: var(--primary-50, #eff6ff);
+}
+
+.account-type-card.selected-supplier {
+  border-color: var(--secondary-500, #7c3aed);
+  background: var(--secondary-50, #f5f3ff);
+}
+
+.account-type-card .icon-wrapper {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 12px;
+}
+
+.account-type-card .icon-wrapper.buyer {
+  background: var(--primary-100, #dbeafe);
+  color: var(--primary-500, #2563eb);
+}
+
+.account-type-card .icon-wrapper.supplier {
+  background: var(--secondary-100, #ede9fe);
+  color: var(--secondary-500, #7c3aed);
+}
+
+.account-type-card .type-title {
+  font-weight: 600;
+  color: var(--gray-900, #0f172a);
+}
+
+.account-type-card .type-desc {
+  font-size: 0.75rem;
+  color: var(--gray-400, #94a3b8);
+  margin-top: 4px;
+}
+
+/* ===== FORM ELEMENTS ===== */
+/* Input wrapper for positioning icons */
+.auth-input-wrapper {
+  position: relative;
+}
+
+.auth-input {
+  width: 100%;
+  padding: 10px 12px 10px 40px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  font-family: 'Inter', sans-serif;
+  color: var(--gray-800, #1e293b);
+}
+
+.auth-input:focus {
+  outline: none;
+  border-color: var(--primary-500, #2563eb);
+  background: white;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08);
+}
+
+.auth-input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.auth-input::placeholder {
+  color: var(--gray-400, #94a3b8);
+}
+
+.auth-input-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--gray-400, #94a3b8);
+  width: 18px;
+  height: 18px;
+  pointer-events: none;
+}
+
+.auth-input-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--gray-400, #94a3b8);
+  cursor: pointer;
+  padding: 4px;
+  transition: color 0.2s ease;
+}
+
+.auth-input-toggle:hover {
+  color: var(--gray-600, #475569);
+}
+
+/* ===== BUTTONS ===== */
+.auth-btn {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.auth-btn-primary {
+  background: var(--gradient-primary, linear-gradient(135deg, #2563eb, #7c3aed));
+  color: white;
+}
+
+.auth-btn-primary:hover:not(:disabled) {
+  transform: scale(1.02);
+  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.3);
+}
+
+.auth-btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.auth-btn-secondary {
+  background: #f1f5f9;
+  color: var(--gray-600, #475569);
+}
+
+.auth-btn-secondary:hover {
+  background: #e2e8f0;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 480px) {
+  .auth-container {
+    padding: 16px;
+  }
+  
+  .auth-card {
+    padding: 24px 20px;
+  }
+  
+  .account-type-grid {
+    gap: 8px;
+  }
+  
+  .account-type-card {
+    padding: 16px 12px;
+  }
+  
+  .account-type-card .icon-wrapper {
+    width: 44px;
+    height: 44px;
+  }
+  
+  .account-type-card .icon-wrapper svg {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .auth-logo .logo-text {
+    font-size: 1.25rem;
+  }
+}
+
+/* ===== DARK MODE ===== */
+@media (prefers-color-scheme: dark) {
+  .auth-container {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 40%, #1e1b4b 100%);
+  }
+  
+  .auth-card {
+    background: #1e293b !important;
+    border-color: #334155;
+  }
+  
+  .auth-logo .logo-sub {
+    color: #94a3b8;
+  }
+  
+  .auth-input {
+    background: #0f172a;
+    border-color: #334155;
+    color: #f1f5f9;
+  }
+  
+  .auth-input:focus {
+    background: #1e293b;
+    border-color: var(--primary-500, #2563eb);
+  }
+  
+  .auth-input::placeholder {
+    color: #64748b;
+  }
+  
+  .auth-input-icon {
+    color: #64748b;
+  }
+  
+  .auth-input-toggle {
+    color: #64748b;
+  }
+  
+  .auth-input-toggle:hover {
+    color: #94a3b8;
+  }
+  
+  .account-type-card {
+    border-color: #334155;
+    color: #f1f5f9;
+  }
+  
+  .account-type-card:hover {
+    border-color: #475569;
+    background: #0f172a;
+  }
+  
+  .account-type-card.selected-buyer {
+    border-color: var(--primary-500, #2563eb);
+    background: #1e3a5f;
+  }
+  
+  .account-type-card.selected-supplier {
+    border-color: var(--secondary-500, #7c3aed);
+    background: #2e1a47;
+  }
+  
+  .account-type-card .type-title {
+    color: #f1f5f9;
+  }
+  
+  .auth-btn-secondary {
+    background: #0f172a;
+    color: #94a3b8;
+  }
+  
+  .auth-btn-secondary:hover {
+    background: #1e293b;
+  }
+}

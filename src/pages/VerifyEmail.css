@@ -1,0 +1,232 @@
+/* ============================================ */
+/* VERIFY EMAIL - Custom Styles */
+/* ============================================ */
+
+/* ===== ANIMATIONS ===== */
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* ===== STATUS ICONS ===== */
+.status-icon-wrapper {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+}
+
+.status-icon-wrapper.verifying {
+  background: #eff6ff;
+}
+
+.status-icon-wrapper.verified {
+  background: #ecfdf5;
+}
+
+.status-icon-wrapper.failed {
+  background: #fef2f2;
+}
+
+.status-icon-wrapper.idle {
+  background: #eff6ff;
+}
+
+/* ===== EMAIL INPUT GROUP ===== */
+.email-input-group {
+  display: flex;
+  gap: 8px;
+}
+
+.email-input-group .email-input {
+  flex: 1;
+  padding: 8px 12px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  font-family: 'Inter', sans-serif;
+}
+
+.email-input-group .email-input:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08);
+}
+
+.email-input-group .email-input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.email-input-group .resend-btn {
+  padding: 8px 16px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'Inter', sans-serif;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.email-input-group .resend-btn:hover:not(:disabled) {
+  background: #1d4ed8;
+  transform: scale(1.02);
+}
+
+.email-input-group .resend-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ===== MESSAGES ===== */
+.verify-message {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  margin-top: 12px;
+}
+
+.verify-message.error {
+  background: #fef2f2;
+  border: 1px solid #fca5a5;
+  color: #dc2626;
+}
+
+.verify-message.success {
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  color: #059669;
+}
+
+.verify-message svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* ===== COUNTDOWN BADGE ===== */
+.countdown-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: #f1f5f9;
+  color: #64748b;
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 480px) {
+  .email-input-group {
+    flex-direction: column;
+  }
+  
+  .email-input-group .resend-btn {
+    justify-content: center;
+    padding: 10px;
+  }
+  
+  .status-icon-wrapper {
+    width: 64px;
+    height: 64px;
+  }
+  
+  .status-icon-wrapper svg {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+/* ===== DARK MODE ===== */
+@media (prefers-color-scheme: dark) {
+  .verify-container {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 40%, #1e1b4b 100%);
+  }
+  
+  .verify-card {
+    background: #1e293b;
+    border-color: #334155;
+  }
+  
+  .verify-card h3 {
+    color: #f1f5f9;
+  }
+  
+  .verify-card p {
+    color: #94a3b8;
+  }
+  
+  .email-input-group .email-input {
+    background: #0f172a;
+    border-color: #334155;
+    color: #f1f5f9;
+  }
+  
+  .email-input-group .email-input:focus {
+    border-color: #2563eb;
+  }
+  
+  .email-input-group .email-input::placeholder {
+    color: #64748b;
+  }
+  
+  .verify-message.error {
+    background: #7f1d1d;
+    border-color: #dc2626;
+    color: #fca5a5;
+  }
+  
+  .verify-message.success {
+    background: #064e3b;
+    border-color: #059669;
+    color: #6ee7b7;
+  }
+  
+  .status-icon-wrapper.verifying {
+    background: #1e3a5f;
+  }
+  
+  .status-icon-wrapper.verified {
+    background: #064e3b;
+  }
+  
+  .status-icon-wrapper.failed {
+    background: #7f1d1d;
+  }
+  
+  .status-icon-wrapper.idle {
+    background: #1e3a5f;
+  }
+  
+  .countdown-badge {
+    background: #0f172a;
+    color: #94a3b8;
+  }
+}

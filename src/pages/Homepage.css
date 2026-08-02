@@ -1,0 +1,232 @@
+/* ============================================ */
+/* HOMEPAGE - Custom Styles */
+/* ============================================ */
+
+/* ===== HERO SECTION ===== */
+.hero-section {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #0f172a 0%, #111827 45%, #1e3a8a 100%);
+  min-height: 72vh;
+  color: white;
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 15% 20%, rgba(59, 130, 246, 0.12), transparent 25%),
+              radial-gradient(circle at 80% 25%, rgba(139, 92, 246, 0.14), transparent 18%);
+  pointer-events: none;
+}
+
+.hero-section .bg-grid,
+.bg-grid-pattern-light {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.08) 1px, transparent 0);
+  background-size: 24px 24px;
+}
+
+.bg-grid-pattern-light {
+  opacity: 0.18;
+}
+
+.hero-section .glow-1 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.1), transparent 70%);
+  border-radius: 50%;
+  filter: blur(60px);
+}
+
+.hero-section .glow-2 {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.1), transparent 70%);
+  border-radius: 50%;
+  filter: blur(60px);
+}
+
+/* ===== STATS COUNTER ===== */
+.stat-counter {
+  animation: countUp 2s ease-out forwards;
+}
+
+@keyframes countUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== QUICK LINK CARDS ===== */
+.quick-link-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.quick-link-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.quick-link-card:hover::after {
+  opacity: 1;
+}
+
+/* ===== FEATURE CARDS ===== */
+.feature-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.1);
+}
+
+.feature-card .icon-wrapper {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.feature-card:hover .icon-wrapper {
+  transform: scale(1.1);
+}
+
+/* ===== CATEGORY CARDS ===== */
+.category-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: #f8fafc;
+}
+
+.category-card:hover {
+  background: #eff6ff;
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.1);
+}
+
+.category-card .emoji {
+  font-size: 2.5rem;
+  transition: transform 0.3s ease;
+}
+
+.category-card:hover .emoji {
+  transform: scale(1.2);
+}
+
+/* ===== TESTIMONIAL CARDS ===== */
+.testimonial-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.testimonial-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px -8px rgba(0, 0, 0, 0.08);
+}
+
+/* ===== CTA SECTION ===== */
+.cta-section {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #1d4ed8, #7c3aed);
+}
+
+.cta-section .glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+}
+
+.cta-section .glow-1 {
+  top: -50%;
+  right: -10%;
+  width: 400px;
+  height: 400px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.cta-section .glow-2 {
+  bottom: -50%;
+  left: -10%;
+  width: 400px;
+  height: 400px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 640px) {
+  .hero-section h1 {
+    font-size: 2rem;
+  }
+  
+  .quick-link-card {
+    padding: 12px !important;
+  }
+  
+  .quick-link-card .icon {
+    width: 20px !important;
+    height: 20px !important;
+  }
+  
+  .feature-card {
+    padding: 16px !important;
+  }
+  
+  .feature-card .icon-wrapper {
+    width: 40px !important;
+    height: 40px !important;
+  }
+  
+  .stat-counter {
+    font-size: 1.5rem !important;
+  }
+}
+
+/* ===== DARK MODE ===== */
+@media (prefers-color-scheme: dark) {
+  .feature-card {
+    background: #1e293b;
+    border-color: #334155;
+  }
+  
+  .feature-card:hover {
+    background: #1e293b;
+    border-color: #475569;
+  }
+  
+  .testimonial-card {
+    background: #1e293b;
+    border-color: #334155;
+  }
+  
+  .category-card {
+    background: #1e293b;
+  }
+  
+  .category-card:hover {
+    background: #1e3a5f;
+  }
+}

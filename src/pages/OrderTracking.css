@@ -1,0 +1,606 @@
+/* ============================================ */
+/* ORDER TRACKING - Custom Styles */
+/* ============================================ */
+
+/* ===== TRACKING STATUS CARD ===== */
+.tracking-status-card {
+  background: white;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  padding: 24px;
+  transition: all 0.3s ease;
+}
+
+.tracking-status-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+.tracking-status-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.tracking-status-icon svg {
+  width: 28px;
+  height: 28px;
+}
+
+/* ===== STATUS COLOR VARIANTS ===== */
+.status-order_placed {
+  background: #eff6ff;
+  color: #2563eb;
+  border-color: #bfdbfe;
+}
+
+.status-processing {
+  background: #fffbeb;
+  color: #d97706;
+  border-color: #fde68a;
+}
+
+.status-picked_up {
+  background: #f5f3ff;
+  color: #7c3aed;
+  border-color: #ddd6fe;
+}
+
+.status-in_transit {
+  background: #eef2ff;
+  color: #4f46e5;
+  border-color: #c7d2fe;
+}
+
+.status-out_for_delivery {
+  background: #fff7ed;
+  color: #ea580c;
+  border-color: #fed7aa;
+}
+
+.status-delivered {
+  background: #ecfdf5;
+  color: #059669;
+  border-color: #a7f3d0;
+}
+
+.status-cancelled {
+  background: #fef2f2;
+  color: #dc2626;
+  border-color: #fca5a5;
+}
+
+/* ===== TRACKING TIMELINE ===== */
+.tracking-timeline {
+  position: relative;
+  padding-left: 32px;
+}
+
+.tracking-timeline::before {
+  content: '';
+  position: absolute;
+  left: 12px;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  background: #e2e8f0;
+}
+
+.tracking-timeline-item {
+  position: relative;
+  padding-bottom: 24px;
+  padding-left: 28px;
+}
+
+.tracking-timeline-item:last-child {
+  padding-bottom: 0;
+}
+
+.tracking-timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -20px;
+  top: 6px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid #e2e8f0;
+  background: white;
+  z-index: 1;
+  transition: all 0.3s ease;
+}
+
+.tracking-timeline-item.completed::before {
+  background: #10b981;
+  border-color: #10b981;
+}
+
+.tracking-timeline-item.current::before {
+  background: #2563eb;
+  border-color: #2563eb;
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.3);
+  }
+  50% {
+    transform: scale(1.2);
+    box-shadow: 0 0 0 8px rgba(37, 99, 235, 0.1);
+  }
+}
+
+.tracking-timeline-item.current .timeline-content {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+}
+
+.tracking-timeline-item.completed .timeline-content {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+}
+
+/* ===== TIMELINE CONTENT ===== */
+.timeline-content {
+  padding: 16px 20px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  background: #fafbfc;
+  transition: all 0.3s ease;
+}
+
+.timeline-content:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.timeline-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.timeline-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.timeline-status .icon {
+  font-size: 1.25rem;
+}
+
+.timeline-status .label {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.timeline-status .label.current {
+  color: #2563eb;
+}
+
+.timeline-status .badge {
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 0.6rem;
+  font-weight: 600;
+  background: #eff6ff;
+  color: #2563eb;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.timeline-description {
+  font-size: 0.875rem;
+  color: #475569;
+  margin-top: 4px;
+}
+
+.timeline-location {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.timeline-location svg {
+  width: 14px;
+  height: 14px;
+}
+
+.timeline-time {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.timeline-relative {
+  font-size: 0.65rem;
+  color: #cbd5e1;
+  text-align: right;
+}
+
+/* ===== TRACKING NUMBER ===== */
+.tracking-number {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: #f8fafc;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 0.875rem;
+  color: #0f172a;
+}
+
+.tracking-number .copy-btn {
+  padding: 4px;
+  border: none;
+  background: transparent;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tracking-number .copy-btn:hover {
+  background: #f1f5f9;
+  color: #2563eb;
+}
+
+.tracking-number .copy-btn.copied {
+  color: #10b981;
+}
+
+.tracking-number .carrier {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 500;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 2px 8px;
+  background: #f1f5f9;
+  border-radius: 999px;
+}
+
+/* ===== ESTIMATED DELIVERY ===== */
+.estimated-delivery {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: #f0fdf4;
+  border-radius: 10px;
+  border: 1px solid #a7f3d0;
+  color: #059669;
+}
+
+.estimated-delivery .label {
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.estimated-delivery .date {
+  font-weight: 700;
+  font-size: 0.875rem;
+}
+
+/* ===== CONTACT MODAL ===== */
+.contact-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(8px);
+  animation: modalFadeIn 0.25s ease-out;
+}
+
+.contact-modal {
+  background: white;
+  border-radius: 20px;
+  max-width: 440px;
+  width: 100%;
+  padding: 24px;
+  animation: modalSlideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.contact-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.contact-modal-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.contact-modal-close {
+  padding: 8px;
+  border: none;
+  background: transparent;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: 10px;
+}
+
+.contact-modal-close:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.contact-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: #f8fafc;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s ease;
+}
+
+.contact-option:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+.contact-option-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: #eff6ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #2563eb;
+  flex-shrink: 0;
+}
+
+.contact-option-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.contact-option-label {
+  font-size: 0.75rem;
+  color: #94a3b8;
+}
+
+.contact-option-value {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.contact-modal-footer {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #e2e8f0;
+  font-size: 0.8rem;
+  color: #94a3b8;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .tracking-status-card {
+    padding: 16px;
+  }
+  
+  .tracking-status-icon {
+    width: 48px;
+    height: 48px;
+  }
+  
+  .tracking-status-icon svg {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .tracking-timeline {
+    padding-left: 0;
+  }
+  
+  .tracking-timeline::before {
+    display: none;
+  }
+  
+  .tracking-timeline-item {
+    padding-left: 0;
+    padding-bottom: 16px;
+  }
+  
+  .tracking-timeline-item::before {
+    display: none;
+  }
+  
+  .timeline-content {
+    padding: 12px 16px;
+  }
+  
+  .timeline-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .timeline-time {
+    text-align: left;
+    width: 100%;
+  }
+  
+  .contact-modal {
+    margin: 16px;
+    padding: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .tracking-status-card {
+    padding: 12px;
+  }
+  
+  .tracking-status-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+  }
+  
+  .tracking-status-icon svg {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .timeline-content {
+    padding: 10px 12px;
+  }
+  
+  .timeline-status .label {
+    font-size: 0.875rem;
+  }
+  
+  .timeline-description {
+    font-size: 0.8rem;
+  }
+  
+  .tracking-number {
+    font-size: 0.75rem;
+    padding: 6px 12px;
+    flex-wrap: wrap;
+  }
+  
+  .contact-option {
+    padding: 12px;
+  }
+}
+
+/* ===== DARK MODE SUPPORT ===== */
+@media (prefers-color-scheme: dark) {
+  .tracking-status-card {
+    background: #1e293b;
+    border-color: #334155;
+  }
+  
+  .tracking-timeline::before {
+    background: #334155;
+  }
+  
+  .tracking-timeline-item::before {
+    background: #1e293b;
+    border-color: #334155;
+  }
+  
+  .tracking-timeline-item.completed::before {
+    background: #10b981;
+    border-color: #10b981;
+  }
+  
+  .tracking-timeline-item.current::before {
+    background: #2563eb;
+    border-color: #2563eb;
+  }
+  
+  .timeline-content {
+    background: #0f172a;
+    border-color: #334155;
+  }
+  
+  .timeline-content:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+  
+  .timeline-status .label {
+    color: #f1f5f9;
+  }
+  
+  .timeline-status .label.current {
+    color: #60a5fa;
+  }
+  
+  .timeline-description {
+    color: #94a3b8;
+  }
+  
+  .timeline-time {
+    color: #64748b;
+  }
+  
+  .timeline-relative {
+    color: #475569;
+  }
+  
+  .tracking-number {
+    background: #0f172a;
+    border-color: #334155;
+    color: #f1f5f9;
+  }
+  
+  .tracking-number .carrier {
+    background: #1e293b;
+    color: #64748b;
+  }
+  
+  .estimated-delivery {
+    background: #064e3b;
+    border-color: #059669;
+    color: #6ee7b7;
+  }
+  
+  .contact-modal {
+    background: #1e293b;
+  }
+  
+  .contact-modal-title {
+    color: #f1f5f9;
+  }
+  
+  .contact-option {
+    background: #0f172a;
+    border-color: #334155;
+  }
+  
+  .contact-option:hover {
+    background: #1e293b;
+    border-color: #475569;
+  }
+  
+  .contact-option-value {
+    color: #f1f5f9;
+  }
+  
+  .contact-modal-footer {
+    border-color: #334155;
+    color: #64748b;
+  }
+  
+  .contact-modal-close {
+    color: #64748b;
+  }
+  
+  .contact-modal-close:hover {
+    background: #1e293b;
+    color: #f1f5f9;
+  }
+}

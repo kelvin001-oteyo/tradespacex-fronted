@@ -1,0 +1,111 @@
+/* ============================================ */
+/* INDEX.CSS - GLOBAL BASE & RESET ONLY */
+/* ============================================ */
+
+/* 1. TAILWIND IMPORTS */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 2. CSS CUSTOM PROPERTIES (Variables) */
+:root {
+  --primary-50: #0f172a;
+  --primary-500: #2563eb;
+  --primary-600: #1d4ed8;
+  --primary-700: #3b82f6;
+
+  --secondary-50: #071426;
+  --secondary-500: #60a5fa;
+
+  --slate-50: #020817;
+  --slate-100: #0f172a;
+  --slate-200: #1e3a5f;
+  --slate-300: #334155;
+  --slate-400: #64748b;
+  --slate-500: #94a3b8;
+  --slate-600: #cbd5e1;
+  --slate-700: #e2e8f0;
+  --slate-800: #f8fafc;
+  --slate-900: #ffffff;
+
+  --radius-full: 9999px;
+}
+
+/* 3. GLOBAL RESET */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(135deg, #020817 0%, #0f172a 45%, #1e3a8a 100%);
+  color: #f8fafc;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+#root {
+  min-height: 100vh;
+  background: transparent;
+}
+
+body .bg-white h1,
+body .bg-white h2,
+body .bg-white h3,
+body .bg-white h4,
+body .bg-white h5,
+body .bg-white h6,
+body .bg-white p,
+body .bg-white span,
+body .bg-white label,
+body .bg-white li {
+  color: #12213F;
+}
+
+body .bg-white .text-slate-500,
+body .bg-white .text-slate-600,
+body .bg-white .text-slate-700,
+body .bg-white .text-slate-800,
+body .bg-white .text-gray-500,
+body .bg-white .text-gray-600,
+body .bg-white .text-gray-700,
+body .bg-white .text-gray-800 {
+  color: #12213F !important;
+}
+
+/* 4. SCROLLBAR */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--slate-100); }
+::-webkit-scrollbar-thumb { background: var(--slate-300); border-radius: var(--radius-full); }
+
+/* 5. CONTAINER */
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+@media (min-width: 640px) {
+  .container { padding: 0 1.5rem; }
+}
+
+/* 6. GLASSMORPHISM */
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* 7. PRINT & REDUCED MOTION */
+@media print { body { background: white; color: black; } }
+@media (prefers-reduced-motion: reduce) { * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }
