@@ -75,7 +75,8 @@ export default function Dashboard() {
       const ordersRes = await api.get('/api/v1/orders/', {
         params: { limit: 5 }
       });
-      const orders = ordersRes.data.results || ordersRes.data;
+      const rawOrders = ordersRes.data?.results || ordersRes.data || [];
+      const orders = Array.isArray(rawOrders) ? rawOrders : [];
       
       // Fetch notifications count
       const notifRes = await api.get('/api/v1/notifications/', {
@@ -528,23 +529,6 @@ export default function Dashboard() {
                 </button>
               </div>
             </div>
-
-
-            // In Dashboard.jsx - Recent Orders
-{recentOrders.map((order) => (
-  <div key={order.id} className="order-row">
-    <div className="order-info">
-      <span className="font-mono text-sm">{order.id}</span>
-      <span className="text-sm">{order.product_name}</span>
-      <Link 
-        to={`/suppliers/${order.supplier_id}`}
-        className="text-sm text-slate-500 hover:text-primary-600 transition-colors"
-      >
-        {order.supplier_name}
-      </Link>
-    </div>
-  </div>
-))}
 
             {/* Trust & Verification */}
             <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5">

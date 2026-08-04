@@ -910,41 +910,6 @@ export default function ProductDetail() {
           </div>
         </div>
 
-        // In ProductDetail.jsx - Supplier Info Section
-<div className="supplier-section border-t border-slate-200 pt-6 mt-6">
-  <h4 className="font-semibold text-ink mb-3">Supplier Information</h4>
-  
-  <div className="flex items-center gap-4 p-4 bg-slate-50 rounded-xl">
-    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center text-white font-bold text-lg">
-      {product.supplier?.business_name?.charAt(0) || 'S'}
-    </div>
-    
-    <div className="flex-1">
-      <Link 
-        to={`/suppliers/${product.supplier?.id}`}
-        className="font-semibold text-ink hover:text-primary-600 transition-colors"
-      >
-        {product.supplier?.business_name || product.supplier?.full_name}
-      </Link>
-      <div className="flex items-center gap-3 text-sm text-slate-500">
-        <span>{product.supplier?.location || 'Location not specified'}</span>
-        <span className="w-1 h-1 bg-slate-300 rounded-full"></span>
-        <span className="flex items-center gap-1">
-          <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
-          {product.supplier?.rating || 'New'}
-        </span>
-      </div>
-    </div>
-    
-    <Link 
-      to={`/suppliers/${product.supplier?.id}`}
-      className="px-4 py-2 bg-primary-50 text-primary-600 rounded-lg text-sm font-medium hover:bg-primary-100 transition-colors"
-    >
-      View Profile
-    </Link>
-  </div>
-</div>
-
         {/* ====== RELATED PRODUCTS ====== */}
         {relatedProducts.length > 0 && (
           <div>

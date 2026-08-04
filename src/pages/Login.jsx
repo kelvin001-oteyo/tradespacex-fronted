@@ -11,7 +11,7 @@ import {
   AlertCircle, 
   CheckCircle, 
   ArrowRight,
-  Shield  // ← ADD THIS IMPORT
+  Shield
 } from 'lucide-react';
 
 export default function Login() {

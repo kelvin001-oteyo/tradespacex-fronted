@@ -1,28 +1,34 @@
-import { useState } from 'react'
-import Navbar from '../components/Navbar'
-import Field from '../components/Field'
-import { useAuth } from '../context/AuthContext'
-import * as authApi from '../api/authApi'
+import { useState } from 'react';
+import Navbar from '../components/Navbar';
+import Field from '../components/Field';
+import { useAuth } from '../context/AuthContext';
 
 export default function ChangePassword() {
-  const { session } = useAuth()
-  const [form, setForm] = useState({ currentPassword: '', newPassword: '' })
-  const [error, setError] = useState('')
-  const [done, setDone] = useState(false)
-  const [busy, setBusy] = useState(false)
+  const { changePassword } = useAuth();
+  const [form, setForm] = useState({ currentPassword: '', newPassword: '' });
+  const [error, setError] = useState('');
+  const [done, setDone] = useState(false);
+  const [busy, setBusy] = useState(false);
 
   async function handleSubmit(e) {
-    e.preventDefault()
-    setError('')
-    setBusy(true)
+    e.preventDefault();
+    setError('');
+    setBusy(true);
     try {
-      await authApi.changePassword({ access: session.access, ...form })
-      setDone(true)
-      setForm({ currentPassword: '', newPassword: '' })
+      const result = await changePassword({
+        current_password: form.currentPassword,
+        new_password: form.newPassword
+      });
+      if (result.success) {
+        setDone(true);
+        setForm({ currentPassword: '', newPassword: '' });
+      } else {
+        setError(result.error || 'Could not update password.');
+      }
     } catch (err) {
-      setError(err.body?.currentPassword?.[0] || 'Could not update password.')
+      setError('An unexpected error occurred. Please try again.');
     } finally {
-      setBusy(false)
+      setBusy(false);
     }
   }
 

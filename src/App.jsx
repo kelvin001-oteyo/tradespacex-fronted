@@ -49,7 +49,6 @@ export default function App() {
           <Route path="/verify-email" element={<VerifyEmail />} />
           <Route path="/verify-email/:token" element={<VerifyEmail />} />
 
-          {/* ===== MARKETPLACE ROUTES ===== */}
           <Route path="/marketplace" element={<Products />} />
           <Route path="/products" element={<Products />} />
           <Route path="/products/:id" element={<ProductDetail />} />
@@ -71,8 +70,20 @@ export default function App() {
           />
 
           {/* ===== SUPPLIER ROUTES ===== */}
+          <Route path="/suppliers" element={<PlaceholderPage title="Suppliers" description="Browse trusted suppliers across Africa." />} />
           <Route path="/suppliers/:id" element={<SupplierProfile />} />
           <Route path="/profile" element={<SupplierProfile />} />
+          <Route 
+            path="/wishlist" 
+            element={
+              <ProtectedRoute>
+                <PlaceholderPage title="Wishlist" description="Your saved products and favorites." />
+              </ProtectedRoute>
+            } 
+          />
+
+          {/* ===== TSE ROUTE ===== */}
+          <Route path="/tse" element={<PlaceholderPage title="TradeSpace Express" description="TradeSpace Express - fast and reliable delivery service." />} />
 
           {/* ===== CART & CHECKOUT ROUTES ===== */}
           <Route path="/cart" element={<Cart />} />

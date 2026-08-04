@@ -109,7 +109,8 @@ export default function Homepage() {
         const productsRes = await api.get('/api/v1/marketplace/products/', {
           params: { featured: true, limit: 8 }
         });
-        productsData = productsRes.data.results || productsRes.data || [];
+        const rawProducts = productsRes.data?.results || productsRes.data || [];
+        productsData = Array.isArray(rawProducts) ? rawProducts : [];
       } catch (err) {
         console.warn('Products API error, using mock data:', err.message);
         productsData = mockProducts;
@@ -120,7 +121,8 @@ export default function Homepage() {
         const suppliersRes = await api.get('/api/v1/suppliers/', {
           params: { top: true, limit: 6 }
         });
-        suppliersData = suppliersRes.data.results || suppliersRes.data || [];
+        const rawSuppliers = suppliersRes.data?.results || suppliersRes.data || [];
+        suppliersData = Array.isArray(rawSuppliers) ? rawSuppliers : [];
       } catch (err) {
         console.warn('Suppliers API error, using mock data:', err.message);
         suppliersData = mockSuppliers;
@@ -129,7 +131,8 @@ export default function Homepage() {
       // Fetch categories
       try {
         const categoriesRes = await api.get('/api/v1/marketplace/categories/');
-        categoriesData = categoriesRes.data.results || categoriesRes.data || [];
+        const rawCategories = categoriesRes.data?.results || categoriesRes.data || [];
+        categoriesData = Array.isArray(rawCategories) ? rawCategories : [];
       } catch (err) {
         console.warn('Categories API error, using mock data:', err.message);
         categoriesData = mockCategories;
@@ -319,7 +322,7 @@ export default function Homepage() {
                       className="w-full pl-12 pr-4 py-4 text-slate-800 focus:outline-none"
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') {
-                          navigate(`/marketplace?search=${e.target.value}`);
+                          navigate(`/marketplace?search=${encodeURIComponent(e.target.value)}`);
                         }
                       }}
                     />

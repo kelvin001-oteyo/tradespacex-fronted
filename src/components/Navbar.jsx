@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import { 
   Menu, X, Search, ShoppingCart, Bell, MessageCircle, 
   User, ChevronDown, Globe, Shield, Truck, Package,
@@ -7,13 +8,17 @@ import {
 } from 'lucide-react';
 import './Navbar.css';
 
-const Navigation = ({ user, userRole, unreadMessages, cartCount }) => {
+const Navigation = () => {
+  const { user, logout } = useAuth();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+
+  const cartCount = 0;
+  const unreadMessages = 0;
 
   // Handle scroll effect for glassmorphism
   useEffect(() => {
@@ -163,8 +168,8 @@ const Navigation = ({ user, userRole, unreadMessages, cartCount }) => {
                       onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
                       className="flex items-center gap-2 p-1.5 rounded-lg hover:bg-gray-100 transition-colors border-2 border-transparent hover:border-primary-200"
                     >
-                      <div className="w-8 h-8 rounded-full bg-gradient-to-r from-primary-500 to-secondary-500 flex items-center justify-center text-white text-sm font-bold">
-                        {user.name?.charAt(0) || 'U'}
+                       <div className="w-8 h-8 rounded-full bg-gradient-to-r from-primary-500 to-secondary-500 flex items-center justify-center text-white text-sm font-bold">
+                        {user?.full_name?.charAt(0) || 'U'}
                       </div>
                       <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${isUserMenuOpen ? 'rotate-180' : ''}`} />
                     </button>
@@ -179,14 +184,14 @@ const Navigation = ({ user, userRole, unreadMessages, cartCount }) => {
                         <div className="absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-2xl border border-gray-100 overflow-hidden z-50">
                           {/* User Info */}
                           <div className="px-4 py-3 bg-gradient-to-r from-primary-50 to-secondary-50 border-b border-gray-100">
-                            <p className="font-semibold text-gray-900">{user.name}</p>
-                            <p className="text-sm text-gray-500">{user.email}</p>
-                            {userRole && (
-                              <span className="inline-flex items-center gap-1 mt-1 text-xs font-medium text-primary-700 bg-primary-100 px-2 py-0.5 rounded-full">
-                                <Shield className="w-3 h-3" />
-                                {userRole.charAt(0).toUpperCase() + userRole.slice(1)}
-                              </span>
-                            )}
+                           <p className="font-semibold text-gray-900">{user?.full_name || 'User'}</p>
+                           <p className="text-sm text-gray-500">{user?.email || ''}</p>
+                           {user?.account_type && (
+                             <span className="inline-flex items-center gap-1 mt-1 text-xs font-medium text-primary-700 bg-primary-100 px-2 py-0.5 rounded-full">
+                               <Shield className="w-3 h-3" />
+                               {user.account_type.charAt(0).toUpperCase() + user.account_type.slice(1)}
+                             </span>
+                           )}
                           </div>
 
                           {/* Menu Items */}
@@ -195,20 +200,20 @@ const Navigation = ({ user, userRole, unreadMessages, cartCount }) => {
                               if (item.divider) {
                                 return <div key={index} className="border-t border-gray-100 my-1"></div>;
                               }
-                              // Skip role-specific items if not matching
-                              if (item.role && userRole !== item.role) return null;
+                              if (item.role && user?.account_type !== item.role) return null;
                               
                               const Icon = item.icon;
                               const isActive = location.pathname === item.path;
                               
                               if (item.action === 'logout') {
                                 return (
-                                  <button
-                                    key={index}
-                                    onClick={() => {
-                                      setIsUserMenuOpen(false);
-                                      // handle logout
-                                    }}
+                                   <button
+                                     key={index}
+                                     onClick={async () => {
+                                       setIsUserMenuOpen(false);
+                                       await logout();
+                                       navigate('/login');
+                                     }}
                                     className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors"
                                   >
                                     <Icon className="w-4 h-4" />
@@ -243,7 +248,7 @@ const Navigation = ({ user, userRole, unreadMessages, cartCount }) => {
                           </div>
 
                           {/* Quick Actions */}
-                          {userRole === 'supplier' && (
+                          {user?.account_type === 'supplier' && (
                             <div className="border-t border-gray-100 p-2">
                               <Link
                                 to="/products/new"
@@ -371,16 +376,17 @@ const Navigation = ({ user, userRole, unreadMessages, cartCount }) => {
               <div className="border-t border-gray-100 pt-4 space-y-1">
                 {userMenuItems.map((item, index) => {
                   if (item.divider) return <div key={index} className="border-t border-gray-100 my-2"></div>;
-                  if (item.role && userRole !== item.role) return null;
+                  if (item.role && user?.account_type !== item.role) return null;
                   
                   const Icon = item.icon;
                   if (item.action === 'logout') {
                     return (
                       <button
                         key={index}
-                        onClick={() => {
+                        onClick={async () => {
                           setIsMobileMenuOpen(false);
-                          // handle logout
+                          await logout();
+                          navigate('/login');
                         }}
                         className="w-full flex items-center gap-3 px-4 py-3 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                       >

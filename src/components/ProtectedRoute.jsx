@@ -28,7 +28,8 @@ export default function ProtectedRoute({
   }
 
   // If email verification is required and user is not verified
-  if (requireVerified && !user?.isEmailVerified) {
+  const isEmailVerified = user?.isEmailVerified || user?.is_email_verified || false;
+  if (requireVerified && !isEmailVerified) {
     return <Navigate to="/verify-email" state={{ from: location }} replace />;
   }
 
