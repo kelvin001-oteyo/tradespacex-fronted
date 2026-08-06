@@ -104,6 +104,7 @@ export default function Register() {
         full_name: formData.fullName,
         email: formData.email,
         password: formData.password,
+        confirm_password: formData.confirmPassword,
         account_type: formData.accountType,
         business_name: formData.accountType === 'supplier' ? formData.businessName : undefined,
         phone: formData.phone || undefined
