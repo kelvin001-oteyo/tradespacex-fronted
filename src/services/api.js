@@ -5,7 +5,7 @@ import axios from 'axios';
 // Use full URL for production
 const API_BASE_URL = import.meta.env.MODE === 'development'
   ? ''
-  : 'https://tradespacex-backend.onrender.com';
+  : (import.meta.env.VITE_API_URL || 'https://tradespacex-backend.onrender.com');
 
 const getStoredToken = () => {
   return localStorage.getItem('access_token') || sessionStorage.getItem('access_token');
