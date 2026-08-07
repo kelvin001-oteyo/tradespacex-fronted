@@ -7,6 +7,9 @@ const API_BASE_URL = import.meta.env.MODE === 'development'
   ? ''
   : (import.meta.env.VITE_API_URL || 'https://tradespacex-backend.onrender.com');
 
+// IMPORTANT: Add /api/v1 to the base URL
+const API_URL = API_BASE_URL ? `${API_BASE_URL}/api/v1` : '/api/v1';
+
 const getStoredToken = () => {
   return localStorage.getItem('access_token') || sessionStorage.getItem('access_token');
 };
@@ -33,7 +36,7 @@ const clearStoredTokens = () => {
 };
 
 const api = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: API_URL,  // Changed from API_BASE_URL to API_URL
   headers: {
     'Content-Type': 'application/json',
   },
@@ -71,7 +74,7 @@ api.interceptors.response.use(
       try {
         const refreshToken = getStoredRefreshToken();
         if (refreshToken) {
-          const response = await axios.post(`${API_BASE_URL}/api/v1/accounts/refresh-token/`, {
+          const response = await axios.post(`${API_URL}/accounts/refresh-token/`, {  // Changed to API_URL
             refresh: refreshToken
           });
           const { access } = response.data;
