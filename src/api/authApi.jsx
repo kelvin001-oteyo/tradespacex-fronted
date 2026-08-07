@@ -4,7 +4,7 @@ import api from '../services/api';
 // Get current user
 export const getMe = async () => {
   try {
-    const response = await api.get('/api/v1/accounts/me/');
+    const response = await api.get('/accounts/me/');  // Removed /api/v1/
     return response.data;
   } catch (error) {
     throw error;
@@ -14,7 +14,7 @@ export const getMe = async () => {
 // Update profile
 export const updateProfile = async (data) => {
   try {
-    const response = await api.put('/api/v1/accounts/update-profile/', data);
+    const response = await api.put('/accounts/update-profile/', data);  // Removed /api/v1/
     return response.data;
   } catch (error) {
     throw error;
@@ -24,7 +24,7 @@ export const updateProfile = async (data) => {
 // Change password
 export const changePassword = async (data) => {
   try {
-    const response = await api.post('/api/v1/accounts/change-password/', data);
+    const response = await api.post('/accounts/change-password/', data);  // Removed /api/v1/
     return response.data;
   } catch (error) {
     throw error;
@@ -34,7 +34,7 @@ export const changePassword = async (data) => {
 // Forgot password
 export const forgotPassword = async (email) => {
   try {
-    const response = await api.post('/api/v1/accounts/forgot-password/', { email });
+    const response = await api.post('/accounts/forgot-password/', { email });  // Removed /api/v1/
     return response.data;
   } catch (error) {
     throw error;
@@ -44,7 +44,7 @@ export const forgotPassword = async (email) => {
 // Reset password
 export const resetPassword = async (data) => {
   try {
-    const response = await api.post('/api/v1/accounts/reset-password/', data);
+    const response = await api.post('/accounts/reset-password/', data);  // Removed /api/v1/
     return response.data;
   } catch (error) {
     throw error;
@@ -54,7 +54,7 @@ export const resetPassword = async (data) => {
 // Verify email
 export const verifyEmail = async (token) => {
   try {
-    const response = await api.get(`/api/v1/accounts/verify-email/?token=${token}`);
+    const response = await api.get(`/accounts/verify-email/?token=${token}`);  // Removed /api/v1/
     return response.data;
   } catch (error) {
     throw error;
@@ -64,7 +64,7 @@ export const verifyEmail = async (token) => {
 // Resend verification email
 export const resendVerification = async (email) => {
   try {
-    const response = await api.post('/api/v1/accounts/resend-verification-email/', { email });
+    const response = await api.post('/accounts/resend-verification-email/', { email });  // Removed /api/v1/
     return response.data;
   } catch (error) {
     throw error;
