@@ -7,8 +7,10 @@ const API_BASE_URL = import.meta.env.MODE === 'development'
   ? ''
   : (import.meta.env.VITE_API_URL || 'https://tradespacex-backend.onrender.com');
 
-// IMPORTANT: Add /api/v1 to the base URL
+// Add /api/v1 to the base URL
 const API_URL = API_BASE_URL ? `${API_BASE_URL}/api/v1` : '/api/v1';
+
+console.log('🔵 API Base URL:', API_URL); // Debug log
 
 const getStoredToken = () => {
   return localStorage.getItem('access_token') || sessionStorage.getItem('access_token');
@@ -36,7 +38,7 @@ const clearStoredTokens = () => {
 };
 
 const api = axios.create({
-  baseURL: API_URL,  // Changed from API_BASE_URL to API_URL
+  baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -50,6 +52,7 @@ api.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    console.log(`📤 ${config.method.toUpperCase()} ${config.baseURL}${config.url}`); // Debug log
     return config;
   },
   (error) => Promise.reject(error)
@@ -57,7 +60,10 @@ api.interceptors.request.use(
 
 // Response interceptor
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    console.log(`📥 ${response.status} ${response.config.url}`); // Debug log
+    return response;
+  },
   async (error) => {
     if (error.code === 'ERR_NETWORK') {
       console.warn('Network error - CORS or connection issue');
@@ -74,7 +80,7 @@ api.interceptors.response.use(
       try {
         const refreshToken = getStoredRefreshToken();
         if (refreshToken) {
-          const response = await axios.post(`${API_URL}/accounts/refresh-token/`, {  // Changed to API_URL
+          const response = await axios.post(`${API_URL}/accounts/refresh-token/`, {
             refresh: refreshToken
           });
           const { access } = response.data;
