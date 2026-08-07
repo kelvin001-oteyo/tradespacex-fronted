@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './Login.css';
 
-
 import {
   Eye,
   EyeOff,
@@ -16,8 +15,6 @@ import {
   AlertCircle,
   CheckCircle,
   ArrowRight,
-  UserCheck,
-  Briefcase,
   ShoppingBag,
   Phone
 } from 'lucide-react';
@@ -32,7 +29,7 @@ export default function Register() {
     email: '',
     password: '',
     confirmPassword: '',
-    accountType: 'buyer', // 'buyer' or 'supplier'
+    accountType: 'buyer',
     businessName: '',
     phone: '',
     agreeTerms: false
@@ -43,29 +40,32 @@ export default function Register() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [step, setStep] = useState(1); // 1: Account Type, 2: Details, 3: Complete
+  const [step, setStep] = useState(1);
+  const [fieldErrors, setFieldErrors] = useState({});
 
-  // Handle input change
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData(prev => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : value
     }));
+    // Clear field error when user types
+    if (fieldErrors[name]) {
+      setFieldErrors(prev => ({ ...prev, [name]: '' }));
+    }
   };
 
-  // Handle account type selection
   const selectAccountType = (type) => {
     setFormData(prev => ({ ...prev, accountType: type }));
     setStep(2);
   };
 
-  // Handle registration
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setFieldErrors({});
     
     // Validation
-    if (!formData.fullName) {
+    if (!formData.fullName.trim()) {
       setError('Please enter your full name');
       return;
     }
@@ -90,7 +90,7 @@ export default function Register() {
       return;
     }
     
-    if (formData.accountType === 'supplier' && !formData.businessName) {
+    if (formData.accountType === 'supplier' && !formData.businessName.trim()) {
       setError('Please enter your business name');
       return;
     }
@@ -100,17 +100,25 @@ export default function Register() {
     setSuccess('');
     
     try {
+      // Prepare registration data - try different field name variations
       const registrationData = {
+        // Try with underscores (common Django/DRF format)
         full_name: formData.fullName,
         email: formData.email,
         password: formData.password,
         confirm_password: formData.confirmPassword,
         account_type: formData.accountType,
-        business_name: formData.accountType === 'supplier' ? formData.businessName : undefined,
-        phone: formData.phone || undefined
+        ...(formData.accountType === 'supplier' && formData.businessName && {
+          business_name: formData.businessName
+        }),
+        ...(formData.phone && { phone: formData.phone })
       };
       
+      console.log('📤 Sending registration data:', registrationData);
+      
       const result = await register(registrationData);
+      
+      console.log('📥 Registration result:', result);
       
       if (result.success) {
         setSuccess('Registration successful! Redirecting to login...');
@@ -119,11 +127,34 @@ export default function Register() {
           navigate('/login');
         }, 2000);
       } else {
-        setError(result.error || 'Registration failed. Please try again.');
+        // Handle field-specific errors
+        if (result.data && typeof result.data === 'object') {
+          const errors = {};
+          let errorMessage = '';
+          
+          Object.entries(result.data).forEach(([field, value]) => {
+            if (Array.isArray(value)) {
+              errors[field] = value.join(', ');
+              errorMessage += `${field}: ${value.join(', ')}\n`;
+            } else if (typeof value === 'string') {
+              errors[field] = value;
+              errorMessage += `${field}: ${value}\n`;
+            }
+          });
+          
+          if (Object.keys(errors).length > 0) {
+            setFieldErrors(errors);
+            setError(errorMessage || result.error || 'Please fix the errors below');
+          } else {
+            setError(result.error || 'Registration failed. Please try again.');
+          }
+        } else {
+          setError(result.error || 'Registration failed. Please try again.');
+        }
       }
     } catch (err) {
+      console.error('❌ Registration error:', err);
       setError('An unexpected error occurred. Please try again.');
-      console.error('Registration error:', err);
     } finally {
       setLoading(false);
     }
@@ -178,7 +209,7 @@ export default function Register() {
           {error && (
             <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-xl text-red-600 text-sm flex items-start gap-2">
               <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
-              <span>{error}</span>
+              <span className="whitespace-pre-wrap">{error}</span>
             </div>
           )}
           
@@ -197,7 +228,6 @@ export default function Register() {
               <p className="text-center text-sm text-slate-500">Select how you want to use TradespaceX</p>
               
               <div className="grid grid-cols-2 gap-4 mt-4">
-                {/* Buyer Option */}
                 <button
                   onClick={() => selectAccountType('buyer')}
                   className="p-6 border-2 border-slate-200 rounded-xl hover:border-primary-400 hover:bg-primary-50/30 transition-all group text-center"
@@ -209,7 +239,6 @@ export default function Register() {
                   <p className="text-xs text-slate-500 mt-1">Find products & suppliers</p>
                 </button>
                 
-                {/* Supplier Option */}
                 <button
                   onClick={() => selectAccountType('supplier')}
                   className="p-6 border-2 border-slate-200 rounded-xl hover:border-secondary-400 hover:bg-secondary-50/30 transition-all group text-center"
@@ -227,7 +256,6 @@ export default function Register() {
           {/* Step 2: Details */}
           {step === 2 && (
             <form onSubmit={handleSubmit} className="space-y-4">
-              {/* Account Type Badge */}
               <div className="flex items-center justify-between p-3 bg-slate-50 rounded-xl">
                 <span className="text-sm text-slate-600">Account Type</span>
                 <span className="flex items-center gap-1.5 text-sm font-medium capitalize">
@@ -250,7 +278,7 @@ export default function Register() {
               {/* Full Name */}
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                  Full Name
+                  Full Name <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
                   <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -259,18 +287,23 @@ export default function Register() {
                     name="fullName"
                     value={formData.fullName}
                     onChange={handleChange}
-                    className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                    className={`w-full pl-10 pr-4 py-2.5 bg-slate-50 border ${
+                      fieldErrors.full_name ? 'border-red-500' : 'border-slate-200'
+                    } rounded-xl text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all`}
                     placeholder="John Doe"
                     disabled={loading}
                   />
                 </div>
+                {fieldErrors.full_name && (
+                  <p className="text-xs text-red-500 mt-1">{fieldErrors.full_name}</p>
+                )}
               </div>
 
               {/* Business Name (Supplier only) */}
               {formData.accountType === 'supplier' && (
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                    Business Name
+                    Business Name <span className="text-red-500">*</span>
                   </label>
                   <div className="relative">
                     <Building className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -279,18 +312,23 @@ export default function Register() {
                       name="businessName"
                       value={formData.businessName}
                       onChange={handleChange}
-                      className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                      className={`w-full pl-10 pr-4 py-2.5 bg-slate-50 border ${
+                        fieldErrors.business_name ? 'border-red-500' : 'border-slate-200'
+                      } rounded-xl text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all`}
                       placeholder="Your Business Name"
                       disabled={loading}
                     />
                   </div>
+                  {fieldErrors.business_name && (
+                    <p className="text-xs text-red-500 mt-1">{fieldErrors.business_name}</p>
+                  )}
                 </div>
               )}
 
               {/* Email */}
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                  Email Address
+                  Email Address <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -299,11 +337,16 @@ export default function Register() {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                    className={`w-full pl-10 pr-4 py-2.5 bg-slate-50 border ${
+                      fieldErrors.email ? 'border-red-500' : 'border-slate-200'
+                    } rounded-xl text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all`}
                     placeholder="you@example.com"
                     disabled={loading}
                   />
                 </div>
+                {fieldErrors.email && (
+                  <p className="text-xs text-red-500 mt-1">{fieldErrors.email}</p>
+                )}
               </div>
 
               {/* Phone (Optional) */}
@@ -319,17 +362,22 @@ export default function Register() {
                     value={formData.phone}
                     onChange={handleChange}
                     maxLength={20}
-                    className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                    className={`w-full pl-10 pr-4 py-2.5 bg-slate-50 border ${
+                      fieldErrors.phone ? 'border-red-500' : 'border-slate-200'
+                    } rounded-xl text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all`}
                     placeholder="+254 700 000 000"
                     disabled={loading}
                   />
                 </div>
+                {fieldErrors.phone && (
+                  <p className="text-xs text-red-500 mt-1">{fieldErrors.phone}</p>
+                )}
               </div>
 
               {/* Password */}
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                  Password
+                  Password <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -338,7 +386,9 @@ export default function Register() {
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
-                      className="w-full pl-10 pr-12 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                    className={`w-full pl-10 pr-12 py-2.5 bg-slate-50 border ${
+                      fieldErrors.password ? 'border-red-500' : 'border-slate-200'
+                    } rounded-xl text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all`}
                     placeholder="••••••••"
                     disabled={loading}
                   />
@@ -350,13 +400,16 @@ export default function Register() {
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                 </div>
+                {fieldErrors.password && (
+                  <p className="text-xs text-red-500 mt-1">{fieldErrors.password}</p>
+                )}
                 <p className="text-xs text-slate-400 mt-1.5">Must be at least 6 characters</p>
               </div>
 
               {/* Confirm Password */}
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                  Confirm Password
+                  Confirm Password <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -365,7 +418,9 @@ export default function Register() {
                     name="confirmPassword"
                     value={formData.confirmPassword}
                     onChange={handleChange}
-                      className="w-full pl-10 pr-12 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                    className={`w-full pl-10 pr-12 py-2.5 bg-slate-50 border ${
+                      fieldErrors.confirm_password ? 'border-red-500' : 'border-slate-200'
+                    } rounded-xl text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all`}
                     placeholder="••••••••"
                     disabled={loading}
                   />
@@ -377,6 +432,9 @@ export default function Register() {
                     {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                 </div>
+                {fieldErrors.confirm_password && (
+                  <p className="text-xs text-red-500 mt-1">{fieldErrors.confirm_password}</p>
+                )}
               </div>
 
               {/* Terms */}
@@ -441,7 +499,7 @@ export default function Register() {
             </div>
           )}
 
-          {/* Login Link (Step 1 & 2) */}
+          {/* Login Link */}
           {step < 3 && (
             <p className="text-center text-sm text-slate-500 mt-6">
               Already have an account?{' '}
