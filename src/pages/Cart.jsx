@@ -64,7 +64,7 @@ export default function Cart() {
       if (isAuthenticated) {
         // If logged in, try to fetch from API
         try {
-          const response = await api.get('/api/v1/cart/');
+          const response = await api.get('/api/cart/');
           const cartData = response.data;
           if (cartData.items && cartData.items.length > 0) {
             setCartItems(cartData.items);
@@ -273,7 +273,7 @@ export default function Cart() {
       };
       
       // Create order
-      const response = await api.post('/api/v1/orders/', orderData);
+      const response = await api.post('/api/orders/', orderData);
       const order = response.data;
       
       // Clear cart

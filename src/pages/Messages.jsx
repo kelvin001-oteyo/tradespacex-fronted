@@ -112,7 +112,7 @@ export default function Messages() {
     setError(null);
     
     try {
-      const response = await api.get('/api/v1/chat/conversations/');
+      const response = await api.get('/api/chat/conversations/');
       const data = response.data.results || response.data || [];
       setConversations(data);
       
@@ -147,7 +147,7 @@ export default function Messages() {
     if (!silent) setLoadingMessages(true);
     
     try {
-      const response = await api.get(`/api/v1/chat/conversations/${conversationId}/messages/`);
+      const response = await api.get(`/api/chat/conversations/${conversationId}/messages/`);
       const data = response.data.results || response.data || [];
       setMessages(data);
       
@@ -179,7 +179,7 @@ export default function Messages() {
   // Mark messages as read
   const markAsRead = async (conversationId) => {
     try {
-      await api.post(`/api/v1/chat/conversations/${conversationId}/read/`);
+      await api.post(`/api/chat/conversations/${conversationId}/read/`);
       setConversations(prev => 
         prev.map(conv => 
           conv.id === parseInt(conversationId) 
@@ -214,7 +214,7 @@ export default function Messages() {
     setMessages(prev => [...prev, tempMessage]);
     
     try {
-      const response = await api.post(`/api/v1/chat/conversations/${id}/messages/`, {
+      const response = await api.post(`/api/chat/conversations/${id}/messages/`, {
         content: messageContent
       });
       
@@ -259,7 +259,7 @@ export default function Messages() {
     setNewMessage(e.target.value);
     if (e.target.value.length > 0 && !typing) {
       setTyping(true);
-      api.post(`/api/v1/chat/conversations/${id}/typing/`);
+      api.post(`/api/chat/conversations/${id}/typing/`);
     }
   };
 

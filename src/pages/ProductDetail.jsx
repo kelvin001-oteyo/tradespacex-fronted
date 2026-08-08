@@ -69,17 +69,17 @@ export default function ProductDetail() {
     
     try {
       // Fetch product details
-      const productRes = await api.get(`/api/v1/marketplace/products/${id}/`);
+      const productRes = await api.get(`/api/marketplace/products/${id}/`);
       const productData = productRes.data;
       setProduct(productData);
       
       // Fetch reviews
-      const reviewsRes = await api.get(`/api/v1/marketplace/products/${id}/reviews/`);
+      const reviewsRes = await api.get(`/api/marketplace/products/${id}/reviews/`);
       setReviews(reviewsRes.data.results || reviewsRes.data || []);
       
       // Fetch related products (same category)
       if (productData.category) {
-        const relatedRes = await api.get('/api/v1/marketplace/products/', {
+        const relatedRes = await api.get('/api/marketplace/products/', {
           params: {
             category: productData.category.id,
             limit: 4,
@@ -106,7 +106,7 @@ export default function ProductDetail() {
     if (!isAuthenticated) return;
     
     try {
-      const response = await api.get('/api/v1/wishlist/');
+      const response = await api.get('/api/wishlist/');
       const wishlist = response.data.results || response.data || [];
       const exists = wishlist.some(item => item.product === parseInt(id));
       setIsWishlist(exists);
@@ -125,16 +125,16 @@ export default function ProductDetail() {
     try {
       if (isWishlist) {
         // Remove from wishlist
-        const wishlistRes = await api.get('/api/v1/wishlist/');
+        const wishlistRes = await api.get('/api/wishlist/');
         const wishlist = wishlistRes.data.results || wishlistRes.data || [];
         const item = wishlist.find(w => w.product === parseInt(id));
         if (item) {
-          await api.delete(`/api/v1/wishlist/${item.id}/`);
+          await api.delete(`/api/wishlist/${item.id}/`);
         }
         setIsWishlist(false);
       } else {
         // Add to wishlist
-        await api.post('/api/v1/wishlist/', { product: id });
+        await api.post('/api/wishlist/', { product: id });
         setIsWishlist(true);
       }
     } catch (err) {
@@ -175,13 +175,13 @@ export default function ProductDetail() {
     setError(null);
     
     try {
-      await api.post(`/api/v1/marketplace/products/${id}/reviews/`, {
+      await api.post(`/api/marketplace/products/${id}/reviews/`, {
         rating: reviewRating,
         comment: reviewComment
       });
       
       // Refresh reviews
-      const reviewsRes = await api.get(`/api/v1/marketplace/products/${id}/reviews/`);
+      const reviewsRes = await api.get(`/api/marketplace/products/${id}/reviews/`);
       setReviews(reviewsRes.data.results || reviewsRes.data || []);
       
       setShowReviewForm(false);

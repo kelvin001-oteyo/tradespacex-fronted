@@ -57,7 +57,7 @@ export default function ProductForm() {
 
   const fetchCategories = async () => {
     try {
-      const response = await api.get('/api/v1/marketplace/categories/');
+      const response = await api.get('/api/marketplace/categories/');
       setCategories(response.data.results || response.data || []);
     } catch (err) {
       console.error('Error fetching categories:', err);
@@ -67,7 +67,7 @@ export default function ProductForm() {
   const fetchProduct = async () => {
     setLoading(true);
     try {
-      const response = await api.get(`/api/v1/marketplace/products/${id}/`);
+      const response = await api.get(`/api/marketplace/products/${id}/`);
       const data = response.data;
       setProduct({
         name: data.name || '',
@@ -122,7 +122,7 @@ export default function ProductForm() {
 
   const removeExistingImage = async (imageId) => {
     try {
-      await api.delete(`/api/v1/marketplace/products/${id}/images/${imageId}/`);
+      await api.delete(`/api/marketplace/products/${id}/images/${imageId}/`);
       setProduct(prev => ({
         ...prev,
         images: prev.images.filter(img => img.id !== imageId)
@@ -158,11 +158,11 @@ export default function ProductForm() {
       
       let response;
       if (isEditing) {
-        response = await api.put(`/api/v1/marketplace/products/${id}/`, formData, {
+        response = await api.put(`/api/marketplace/products/${id}/`, formData, {
           headers: { 'Content-Type': 'multipart/form-data' }
         });
       } else {
-        response = await api.post('/api/v1/marketplace/products/', formData, {
+        response = await api.post('/api/marketplace/products/', formData, {
           headers: { 'Content-Type': 'multipart/form-data' }
         });
       }

@@ -106,7 +106,7 @@ export default function Homepage() {
 
       // Fetch featured products
       try {
-        const productsRes = await api.get('/api/v1/marketplace/products/', {
+        const productsRes = await api.get('/api/marketplace/products/', {
           params: { featured: true, limit: 8 }
         });
         const rawProducts = productsRes.data?.results || productsRes.data || [];
@@ -118,7 +118,7 @@ export default function Homepage() {
 
       // Fetch top suppliers
       try {
-        const suppliersRes = await api.get('/api/v1/suppliers/', {
+        const suppliersRes = await api.get('/api/suppliers/', {
           params: { top: true, limit: 6 }
         });
         const rawSuppliers = suppliersRes.data?.results || suppliersRes.data || [];
@@ -130,7 +130,7 @@ export default function Homepage() {
 
       // Fetch categories
       try {
-        const categoriesRes = await api.get('/api/v1/marketplace/categories/');
+        const categoriesRes = await api.get('/api/marketplace/categories/');
         const rawCategories = categoriesRes.data?.results || categoriesRes.data || [];
         categoriesData = Array.isArray(rawCategories) ? rawCategories : [];
       } catch (err) {
@@ -140,7 +140,7 @@ export default function Homepage() {
 
       // Fetch stats
       try {
-        const statsRes = await api.get('/api/v1/stats/');
+        const statsRes = await api.get('/api/stats/');
         statsData = statsRes.data || {};
       } catch (err) {
         console.warn('Stats API error, using default values:', err.message);

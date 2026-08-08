@@ -120,7 +120,7 @@ export default function Products() {
       if (filters.status) params.append('status', filters.status);
       if (filters.sort_by) params.append('ordering', filters.sort_by);
       
-      const response = await api.get(`/api/v1/marketplace/products/?${params.toString()}`);
+      const response = await api.get(`/api/marketplace/products/?${params.toString()}`);
       
       const data = response.data;
       setProducts(data.results || data);
@@ -147,7 +147,7 @@ export default function Products() {
 
   const fetchCategories = async () => {
     try {
-      const response = await api.get('/api/v1/marketplace/categories/');
+      const response = await api.get('/api/marketplace/categories/');
       setCategories(response.data.results || response.data || []);
     } catch (err) {
       console.error('Error fetching categories:', err);
@@ -178,7 +178,7 @@ export default function Products() {
     if (!productToDelete) return;
     
     try {
-      await api.delete(`/api/v1/marketplace/products/${productToDelete.id}/`);
+      await api.delete(`/api/marketplace/products/${productToDelete.id}/`);
       setProducts(products.filter(p => p.id !== productToDelete.id));
       setShowDeleteModal(false);
       setProductToDelete(null);
@@ -193,7 +193,7 @@ export default function Products() {
     if (!productToUpdate) return;
     
     try {
-      const response = await api.patch(`/api/v1/marketplace/products/${productToUpdate.id}/`, {
+      const response = await api.patch(`/api/marketplace/products/${productToUpdate.id}/`, {
         status: productToUpdate.newStatus
       });
       

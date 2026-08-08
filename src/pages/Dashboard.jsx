@@ -68,18 +68,18 @@ export default function Dashboard() {
     
     try {
       // Fetch dashboard stats
-      const dashboardRes = await api.get('/api/v1/dashboard/');
+      const dashboardRes = await api.get('/api/dashboard/');
       const dashboard = dashboardRes.data;
       
       // Fetch recent orders
-      const ordersRes = await api.get('/api/v1/orders/', {
+      const ordersRes = await api.get('/api/orders/', {
         params: { limit: 5 }
       });
       const rawOrders = ordersRes.data?.results || ordersRes.data || [];
       const orders = Array.isArray(rawOrders) ? rawOrders : [];
       
       // Fetch notifications count
-      const notifRes = await api.get('/api/v1/notifications/', {
+      const notifRes = await api.get('/api/notifications/', {
         params: { unread_only: true, limit: 1 }
       });
       const unreadCount = notifRes.data.count || 0;

@@ -93,7 +93,7 @@ export default function SupplierProfile() {
     
     try {
       // Fetch supplier profile
-      const profileRes = await api.get(`/api/v1/suppliers/${supplierId}/`);
+      const profileRes = await api.get(`/api/suppliers/${supplierId}/`);
       const supplierData = profileRes.data;
       setSupplier(supplierData);
       
@@ -111,17 +111,17 @@ export default function SupplierProfile() {
       });
       
       // Fetch products
-      const productsRes = await api.get('/api/v1/marketplace/products/', {
+      const productsRes = await api.get('/api/marketplace/products/', {
         params: { supplier: supplierId, limit: 6 }
       });
       setProducts(productsRes.data.results || productsRes.data || []);
       
       // Fetch reviews
-      const reviewsRes = await api.get(`/api/v1/suppliers/${supplierId}/reviews/`);
+      const reviewsRes = await api.get(`/api/suppliers/${supplierId}/reviews/`);
       setReviews(reviewsRes.data.results || reviewsRes.data || []);
       
       // Fetch stats
-      const statsRes = await api.get(`/api/v1/suppliers/${supplierId}/stats/`);
+      const statsRes = await api.get(`/api/suppliers/${supplierId}/stats/`);
       setStats({
         totalProducts: statsRes.data.total_products || productsRes.data.count || 0,
         totalOrders: statsRes.data.total_orders || 0,
@@ -151,7 +151,7 @@ export default function SupplierProfile() {
     setLoading(true);
     
     try {
-      const response = await api.put(`/api/v1/suppliers/${supplierId}/`, editForm);
+      const response = await api.put(`/api/suppliers/${supplierId}/`, editForm);
       setSupplier(response.data);
       setIsEditing(false);
     } catch (err) {

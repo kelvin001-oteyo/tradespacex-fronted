@@ -119,7 +119,7 @@ export default function Settings() {
   const fetchSettings = async () => {
     setLoading(true);
     try {
-      const response = await api.get('/api/v1/settings/');
+      const response = await api.get('/api/settings/');
       const data = response.data;
       
       // Update settings from API response
@@ -152,7 +152,7 @@ export default function Settings() {
         theme: themeSettings
       };
       
-      await api.put('/api/v1/settings/', settingsData);
+      await api.put('/api/settings/', settingsData);
       setSuccess('Settings saved successfully!');
       setTimeout(() => setSuccess(''), 3000);
     } catch (err) {
@@ -220,7 +220,7 @@ export default function Settings() {
     
     setDeleting(true);
     try {
-      await api.delete('/api/v1/accounts/delete/');
+      await api.delete('/api/accounts/delete/');
       await logout();
       navigate('/');
     } catch (err) {
@@ -852,7 +852,7 @@ export default function Settings() {
               <button
                 onClick={() => {
                   if (window.confirm('Download your data? This may take a few moments.')) {
-                    window.location.href = '/api/v1/accounts/export-data/';
+                    window.location.href = '/api/accounts/export-data/';
                   }
                 }}
                 className="flex items-center gap-2 px-5 py-2.5 bg-slate-100 text-slate-700 rounded-xl font-medium hover:bg-slate-200 transition-colors"
