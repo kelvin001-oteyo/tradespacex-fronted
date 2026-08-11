@@ -43,7 +43,8 @@ export default function OrderDetail() {
     setError(null);
     
     try {
-      const response = await api.get(`/api/v1/orders/${id}/`);
+      // ✅ FIXED: Removed /api/v1/ from endpoint
+      const response = await api.get(`/orders/${id}/`);
       setOrder(response.data);
     } catch (err) {
       console.error('Error fetching order:', err);
