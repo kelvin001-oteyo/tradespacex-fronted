@@ -92,8 +92,8 @@ export default function SupplierProfile() {
     setError(null);
     
     try {
-      // Fetch supplier profile
-      const profileRes = await api.get(`/api/suppliers/${supplierId}/`);
+      // ✅ FIXED: Removed /api/ from endpoint
+      const profileRes = await api.get(`/suppliers/${supplierId}/`);
       const supplierData = profileRes.data;
       setSupplier(supplierData);
       
@@ -110,18 +110,18 @@ export default function SupplierProfile() {
         categories: supplierData.categories || []
       });
       
-      // Fetch products
-      const productsRes = await api.get('/api/marketplace/products/', {
+      // ✅ FIXED: Removed /api/ from endpoint
+      const productsRes = await api.get('/marketplace/products/', {
         params: { supplier: supplierId, limit: 6 }
       });
       setProducts(productsRes.data.results || productsRes.data || []);
       
-      // Fetch reviews
-      const reviewsRes = await api.get(`/api/suppliers/${supplierId}/reviews/`);
+      // ✅ FIXED: Removed /api/ from endpoint
+      const reviewsRes = await api.get(`/suppliers/${supplierId}/reviews/`);
       setReviews(reviewsRes.data.results || reviewsRes.data || []);
       
-      // Fetch stats
-      const statsRes = await api.get(`/api/suppliers/${supplierId}/stats/`);
+      // ✅ FIXED: Removed /api/ from endpoint
+      const statsRes = await api.get(`/suppliers/${supplierId}/stats/`);
       setStats({
         totalProducts: statsRes.data.total_products || productsRes.data.count || 0,
         totalOrders: statsRes.data.total_orders || 0,
@@ -151,7 +151,8 @@ export default function SupplierProfile() {
     setLoading(true);
     
     try {
-      const response = await api.put(`/api/suppliers/${supplierId}/`, editForm);
+      // ✅ FIXED: Removed /api/ from endpoint
+      const response = await api.put(`/suppliers/${supplierId}/`, editForm);
       setSupplier(response.data);
       setIsEditing(false);
     } catch (err) {
@@ -203,7 +204,7 @@ export default function SupplierProfile() {
 
   // Get verification level from stats - ONLY DECLARE ONCE
   const verificationBadge = getVerificationBadge(stats.verificationLevel);
-  const VerificationIcon = verificationBadge.icon; // ← ONLY ONE DECLARATION
+  const VerificationIcon = verificationBadge.icon;
 
   // Loading state
   if (loading) {
@@ -562,92 +563,110 @@ export default function SupplierProfile() {
                   <form onSubmit={handleProfileUpdate} className="space-y-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <label className="label label-required">Business Name</label>
+                        <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                          Business Name <span className="text-red-500">*</span>
+                        </label>
                         <input
                           type="text"
                           name="business_name"
                           value={editForm.business_name}
                           onChange={handleEditChange}
                           required
-                          className="input"
+                          className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
                         />
                       </div>
                       <div>
-                        <label className="label">Business Type</label>
+                        <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                          Business Type
+                        </label>
                         <input
                           type="text"
                           name="business_type"
                           value={editForm.business_type}
                           onChange={handleEditChange}
-                          className="input"
+                          className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
                           placeholder="e.g., Manufacturer, Distributor"
                         />
                       </div>
                       <div>
-                        <label className="label">Location</label>
+                        <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                          Location
+                        </label>
                         <input
                           type="text"
                           name="location"
                           value={editForm.location}
                           onChange={handleEditChange}
-                          className="input"
+                          className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
                           placeholder="City, Country"
                         />
                       </div>
                       <div>
-                        <label className="label">Founded Year</label>
+                        <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                          Founded Year
+                        </label>
                         <input
                           type="text"
                           name="founded_year"
                           value={editForm.founded_year}
                           onChange={handleEditChange}
-                          className="input"
+                          className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
                           placeholder="e.g., 2010"
                         />
                       </div>
                       <div>
-                        <label className="label">Phone</label>
+                        <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                          Phone
+                        </label>
                         <input
                           type="tel"
                           name="phone"
                           value={editForm.phone}
                           onChange={handleEditChange}
-                          className="input"
+                          className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
                           placeholder="+254 700 000 000"
                         />
                       </div>
                       <div>
-                        <label className="label">Website</label>
+                        <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                          Website
+                        </label>
                         <input
                           type="url"
                           name="website"
                           value={editForm.website}
                           onChange={handleEditChange}
-                          className="input"
+                          className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
                           placeholder="https://example.com"
                         />
                       </div>
                       <div className="md:col-span-2">
-                        <label className="label">Description</label>
+                        <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                          Description
+                        </label>
                         <textarea
                           name="description"
                           value={editForm.description}
                           onChange={handleEditChange}
                           rows="4"
-                          className="input resize-y"
+                          className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all resize-y"
                           placeholder="Tell buyers about your business..."
                         />
                       </div>
                     </div>
                     
                     <div className="flex gap-3">
-                      <button type="submit" className="btn-primary">
-                        Save Changes
+                      <button 
+                        type="submit" 
+                        disabled={loading}
+                        className="px-6 py-2.5 bg-gradient-to-r from-primary-500 to-secondary-500 text-white rounded-xl font-medium hover:shadow-lg transition-all hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {loading ? 'Saving...' : 'Save Changes'}
                       </button>
                       <button
                         type="button"
                         onClick={() => setIsEditing(false)}
-                        className="btn-secondary"
+                        className="px-6 py-2.5 bg-slate-100 text-slate-700 rounded-xl font-medium hover:bg-slate-200 transition-colors"
                       >
                         Cancel
                       </button>
