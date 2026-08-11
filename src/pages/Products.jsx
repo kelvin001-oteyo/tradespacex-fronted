@@ -31,7 +31,9 @@ import {
   XCircle,
   Image as ImageIcon,
   Upload,
-  X
+  X,
+  ArrowLeft,
+  Building
 } from 'lucide-react';
 
 export default function Products() {
@@ -120,7 +122,8 @@ export default function Products() {
       if (filters.status) params.append('status', filters.status);
       if (filters.sort_by) params.append('ordering', filters.sort_by);
       
-      const response = await api.get(`/api/marketplace/products/?${params.toString()}`);
+      // ✅ FIXED: Removed /api/ from endpoint
+      const response = await api.get(`/marketplace/products/?${params.toString()}`);
       
       const data = response.data;
       setProducts(data.results || data);
@@ -147,7 +150,8 @@ export default function Products() {
 
   const fetchCategories = async () => {
     try {
-      const response = await api.get('/api/marketplace/categories/');
+      // ✅ FIXED: Removed /api/ from endpoint
+      const response = await api.get('/marketplace/categories/');
       setCategories(response.data.results || response.data || []);
     } catch (err) {
       console.error('Error fetching categories:', err);
@@ -178,7 +182,8 @@ export default function Products() {
     if (!productToDelete) return;
     
     try {
-      await api.delete(`/api/marketplace/products/${productToDelete.id}/`);
+      // ✅ FIXED: Removed /api/ from endpoint
+      await api.delete(`/marketplace/products/${productToDelete.id}/`);
       setProducts(products.filter(p => p.id !== productToDelete.id));
       setShowDeleteModal(false);
       setProductToDelete(null);
@@ -193,7 +198,8 @@ export default function Products() {
     if (!productToUpdate) return;
     
     try {
-      const response = await api.patch(`/api/marketplace/products/${productToUpdate.id}/`, {
+      // ✅ FIXED: Removed /api/ from endpoint
+      const response = await api.patch(`/marketplace/products/${productToUpdate.id}/`, {
         status: productToUpdate.newStatus
       });
       
@@ -570,36 +576,6 @@ export default function Products() {
                         </div>
                       </div>
                     </div>
-                    // In ProductCard component or Products.jsx
-<div className="product-card">
-  {/* Product Image */}
-  <div className="product-image">
-    <img src={product.image} alt={product.name} />
-  </div>
-  
-  {/* Product Info */}
-  <div className="product-info">
-    <h3 className="product-name">{product.name}</h3>
-    <p className="product-price">{formatCurrency(product.price)}</p>
-    
-    {/* Supplier Info with Link */}
-    <div className="supplier-info">
-      <Link 
-        to={`/suppliers/${product.supplier?.id}`}
-        className="supplier-link hover:text-primary-600 transition-colors"
-      >
-        <Building className="w-4 h-4 inline mr-1" />
-        {product.supplier?.business_name || product.supplier?.full_name || 'Unknown Supplier'}
-      </Link>
-    </div>
-    
-    {/* Rating */}
-    <div className="product-rating">
-      <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
-      <span>{product.rating || 0}</span>
-    </div>
-  </div>
-</div>
                     
                     {/* Product Info */}
                     <div className="p-4">
