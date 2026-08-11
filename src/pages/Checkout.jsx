@@ -23,7 +23,8 @@ import {
   Package,
   DollarSign,
   Calendar,
-  Clock
+  Clock,
+  X
 } from 'lucide-react';
 
 export default function Checkout() {
@@ -67,7 +68,8 @@ export default function Checkout() {
     setError(null);
     
     try {
-      const response = await api.get(`/api/v1/orders/${id}/`);
+      // ✅ FIXED: Removed /api/v1/ from endpoint
+      const response = await api.get(`/orders/${id}/`);
       const orderData = response.data;
       setOrder(orderData);
       
@@ -142,13 +144,14 @@ export default function Checkout() {
         billing_same_as_shipping: billingSameAsShipping
       };
       
-      await api.patch(`/api/v1/orders/${id}/`, updateData);
+      // ✅ FIXED: Removed /api/v1/ from endpoint
+      await api.patch(`/orders/${id}/`, updateData);
       
       // Process payment (simulate)
       await new Promise(resolve => setTimeout(resolve, 1500));
       
-      // Mark order as paid
-      await api.post(`/api/v1/orders/${id}/pay/`, {
+      // ✅ FIXED: Removed /api/v1/ from endpoint
+      await api.post(`/orders/${id}/pay/`, {
         payment_method: paymentMethod
       });
       
@@ -323,97 +326,113 @@ export default function Checkout() {
                 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="label label-required">Full Name</label>
+                    <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                      Full Name <span className="text-red-500">*</span>
+                    </label>
                     <input
                       type="text"
                       name="full_name"
                       value={shippingAddress.full_name}
                       onChange={handleAddressChange}
                       required
-                      className="input"
+                      className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
                       placeholder="John Doe"
                     />
                   </div>
                   <div>
-                    <label className="label label-required">Email</label>
+                    <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                      Email <span className="text-red-500">*</span>
+                    </label>
                     <input
                       type="email"
                       name="email"
                       value={shippingAddress.email}
                       onChange={handleAddressChange}
                       required
-                      className="input"
+                      className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
                       placeholder="john@example.com"
                     />
                   </div>
                   <div>
-                    <label className="label label-required">Phone</label>
+                    <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                      Phone <span className="text-red-500">*</span>
+                    </label>
                     <input
                       type="tel"
                       name="phone"
                       value={shippingAddress.phone}
                       onChange={handleAddressChange}
                       required
-                      className="input"
+                      className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
                       placeholder="+254 700 000 000"
                     />
                   </div>
                   <div>
-                    <label className="label label-required">Country</label>
+                    <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                      Country <span className="text-red-500">*</span>
+                    </label>
                     <input
                       type="text"
                       name="country"
                       value={shippingAddress.country}
                       onChange={handleAddressChange}
                       required
-                      className="input"
+                      className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
                       placeholder="Kenya"
                     />
                   </div>
                   <div className="sm:col-span-2">
-                    <label className="label label-required">Address Line 1</label>
+                    <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                      Address Line 1 <span className="text-red-500">*</span>
+                    </label>
                     <input
                       type="text"
                       name="address_line1"
                       value={shippingAddress.address_line1}
                       onChange={handleAddressChange}
                       required
-                      className="input"
+                      className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
                       placeholder="Street address, P.O. Box"
                     />
                   </div>
                   <div className="sm:col-span-2">
-                    <label className="label">Address Line 2</label>
+                    <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                      Address Line 2
+                    </label>
                     <input
                       type="text"
                       name="address_line2"
                       value={shippingAddress.address_line2}
                       onChange={handleAddressChange}
-                      className="input"
+                      className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
                       placeholder="Apartment, suite, unit, etc. (optional)"
                     />
                   </div>
                   <div>
-                    <label className="label label-required">City</label>
+                    <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                      City <span className="text-red-500">*</span>
+                    </label>
                     <input
                       type="text"
                       name="city"
                       value={shippingAddress.city}
                       onChange={handleAddressChange}
                       required
-                      className="input"
+                      className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
                       placeholder="Nairobi"
                     />
                   </div>
                   <div>
-                    <label className="label label-required">Postal Code</label>
+                    <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                      Postal Code <span className="text-red-500">*</span>
+                    </label>
                     <input
                       type="text"
                       name="postal_code"
                       value={shippingAddress.postal_code}
                       onChange={handleAddressChange}
                       required
-                      className="input"
+                      className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
                       placeholder="00100"
                     />
                   </div>
@@ -485,12 +504,14 @@ export default function Checkout() {
                   </label>
                   
                   <div>
-                    <label className="label">Order Notes (Optional)</label>
+                    <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                      Order Notes (Optional)
+                    </label>
                     <textarea
                       value={notes}
                       onChange={(e) => setNotes(e.target.value)}
                       rows="2"
-                      className="input"
+                      className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all resize-y"
                       placeholder="Special instructions for delivery..."
                     />
                   </div>
