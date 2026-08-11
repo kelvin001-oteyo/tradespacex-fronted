@@ -98,25 +98,32 @@ export default function Homepage() {
     setLoading(true);
     
     try {
-      // Try to fetch from API, but don't fail if endpoints don't exist
       let productsData = [];
       let suppliersData = [];
       let categoriesData = [];
       let statsData = {};
 
-      // ✅ FIXED: Removed /api/ from endpoint
+      // Fetch featured products - handle timeout gracefully
       try {
         const productsRes = await api.get('/marketplace/products/', {
-          params: { featured: true, limit: 8 }
+          params: { featured: true, limit: 8 },
+          timeout: 10000 // 10 second timeout
         });
         const rawProducts = productsRes.data?.results || productsRes.data || [];
         productsData = Array.isArray(rawProducts) ? rawProducts : [];
       } catch (err) {
-        console.warn('Products API error, using mock data:', err.message);
+        // Only log if not a 404 (endpoint doesn't exist)
+        if (err.response?.status === 404) {
+          console.log('Products endpoint not available, using mock data');
+        } else if (err.code === 'ECONNABORTED') {
+          console.log('Products request timed out, using mock data');
+        } else {
+          console.warn('Products API error:', err.message);
+        }
         productsData = mockProducts;
       }
 
-      // ✅ FIXED: Removed /api/ from endpoint
+      // Fetch top suppliers - handle 404 gracefully
       try {
         const suppliersRes = await api.get('/suppliers/', {
           params: { top: true, limit: 6 }
@@ -124,26 +131,40 @@ export default function Homepage() {
         const rawSuppliers = suppliersRes.data?.results || suppliersRes.data || [];
         suppliersData = Array.isArray(rawSuppliers) ? rawSuppliers : [];
       } catch (err) {
-        console.warn('Suppliers API error, using mock data:', err.message);
+        // Silently handle 404 - endpoint might not exist yet
+        if (err.response?.status === 404) {
+          console.log('Suppliers endpoint not available, using mock data');
+        } else {
+          console.warn('Suppliers API error:', err.message);
+        }
         suppliersData = mockSuppliers;
       }
 
-      // ✅ FIXED: Removed /api/ from endpoint
+      // Fetch categories
       try {
         const categoriesRes = await api.get('/marketplace/categories/');
         const rawCategories = categoriesRes.data?.results || categoriesRes.data || [];
         categoriesData = Array.isArray(rawCategories) ? rawCategories : [];
       } catch (err) {
-        console.warn('Categories API error, using mock data:', err.message);
+        if (err.response?.status === 404) {
+          console.log('Categories endpoint not available, using mock data');
+        } else {
+          console.warn('Categories API error:', err.message);
+        }
         categoriesData = mockCategories;
       }
 
-      // ✅ FIXED: Removed /api/ from endpoint
+      // Fetch stats - handle 404 gracefully
       try {
         const statsRes = await api.get('/stats/');
         statsData = statsRes.data || {};
       } catch (err) {
-        console.warn('Stats API error, using default values:', err.message);
+        // Silently handle 404 - endpoint might not exist yet
+        if (err.response?.status === 404) {
+          console.log('Stats endpoint not available, using default values');
+        } else {
+          console.warn('Stats API error:', err.message);
+        }
         statsData = {
           total_products: productsData.length || 1247,
           total_suppliers: suppliersData.length || 356,
