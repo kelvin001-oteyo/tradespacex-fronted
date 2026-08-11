@@ -83,7 +83,7 @@ export const AuthProvider = ({ children }) => {
 
   const fetchUser = async () => {
     try {
-      const response = await api.get('/accounts/me/');  // REMOVED /api/v1/
+      const response = await api.get('/accounts/me/');
       setUser(response.data);
     } catch (error) {
       console.error('Failed to fetch user:', error);
@@ -100,7 +100,7 @@ export const AuthProvider = ({ children }) => {
   // Login
   const login = async (email, password, rememberMe = false) => {
     try {
-      const response = await api.post('/accounts/login/', {  // REMOVED /api/v1/
+      const response = await api.post('/accounts/login/', {
         email,
         password
       });
@@ -122,7 +122,7 @@ export const AuthProvider = ({ children }) => {
   // Register
   const register = async (userData) => {
     try {
-      const response = await api.post('/accounts/register/', userData);  // REMOVED /api/v1/
+      const response = await api.post('/accounts/register/', userData);
       return { success: true, data: response.data };
     } catch (error) {
       return {
@@ -135,7 +135,7 @@ export const AuthProvider = ({ children }) => {
   // Logout
   const logout = async () => {
     try {
-      await api.post('/accounts/logout/');  // REMOVED /api/v1/
+      await api.post('/accounts/logout/');
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
@@ -150,7 +150,7 @@ export const AuthProvider = ({ children }) => {
   // Update Profile
   const updateProfile = async (data) => {
     try {
-      const response = await api.put('/accounts/update-profile/', data);  // REMOVED /api/v1/
+      const response = await api.put('/accounts/update-profile/', data);
       setUser(response.data);
       return { success: true, user: response.data };
     } catch (error) {
@@ -164,7 +164,7 @@ export const AuthProvider = ({ children }) => {
   // Change Password
   const changePassword = async (data) => {
     try {
-      await api.post('/accounts/change-password/', data);  // REMOVED /api/v1/
+      await api.post('/accounts/change-password/', data);
       return { success: true };
     } catch (error) {
       return { 
@@ -179,7 +179,7 @@ export const AuthProvider = ({ children }) => {
   // Forgot Password
   const forgotPassword = async (email) => {
     try {
-      await api.post('/accounts/forgot-password/', { email });  // REMOVED /api/v1/
+      await api.post('/accounts/forgot-password/', { email });
       return { success: true };
     } catch (error) {
       return { 
@@ -192,7 +192,7 @@ export const AuthProvider = ({ children }) => {
   // Reset Password
   const resetPassword = async (token, newPassword) => {
     try {
-      await api.post('/accounts/reset-password/', {  // REMOVED /api/v1/
+      await api.post('/accounts/reset-password/', {
         token,
         new_password: newPassword
       });
@@ -210,7 +210,7 @@ export const AuthProvider = ({ children }) => {
   // Verify Email
   const verifyEmail = async (token) => {
     try {
-      await api.get(`/accounts/verify-email/?token=${token}`);  // REMOVED /api/v1/
+      await api.get(`/accounts/verify-email/?token=${token}`);
       return { success: true };
     } catch (error) {
       return { 
@@ -223,7 +223,7 @@ export const AuthProvider = ({ children }) => {
   // Resend Verification Email
   const resendVerificationEmail = async (email) => {
     try {
-      await api.post('/accounts/resend-verification-email/', { email });  // REMOVED /api/v1/
+      await api.post('/accounts/resend-verification-email/', { email });
       return { success: true };
     } catch (error) {
       return { 
@@ -243,7 +243,8 @@ export const AuthProvider = ({ children }) => {
         throw new Error('No refresh token available');
       }
       
-      const response = await api.post('/accounts/refresh-token/', {  // REMOVED /api/v1/
+      // ✅ FIXED: Changed from /accounts/refresh-token/ to /accounts/refresh/
+      const response = await api.post('/accounts/refresh/', {
         refresh
       });
       
