@@ -104,9 +104,9 @@ export default function Homepage() {
       let categoriesData = [];
       let statsData = {};
 
-      // Fetch featured products
+      // ✅ FIXED: Removed /api/ from endpoint
       try {
-        const productsRes = await api.get('/api/marketplace/products/', {
+        const productsRes = await api.get('/marketplace/products/', {
           params: { featured: true, limit: 8 }
         });
         const rawProducts = productsRes.data?.results || productsRes.data || [];
@@ -116,9 +116,9 @@ export default function Homepage() {
         productsData = mockProducts;
       }
 
-      // Fetch top suppliers
+      // ✅ FIXED: Removed /api/ from endpoint
       try {
-        const suppliersRes = await api.get('/api/suppliers/', {
+        const suppliersRes = await api.get('/suppliers/', {
           params: { top: true, limit: 6 }
         });
         const rawSuppliers = suppliersRes.data?.results || suppliersRes.data || [];
@@ -128,9 +128,9 @@ export default function Homepage() {
         suppliersData = mockSuppliers;
       }
 
-      // Fetch categories
+      // ✅ FIXED: Removed /api/ from endpoint
       try {
-        const categoriesRes = await api.get('/api/marketplace/categories/');
+        const categoriesRes = await api.get('/marketplace/categories/');
         const rawCategories = categoriesRes.data?.results || categoriesRes.data || [];
         categoriesData = Array.isArray(rawCategories) ? rawCategories : [];
       } catch (err) {
@@ -138,9 +138,9 @@ export default function Homepage() {
         categoriesData = mockCategories;
       }
 
-      // Fetch stats
+      // ✅ FIXED: Removed /api/ from endpoint
       try {
-        const statsRes = await api.get('/api/stats/');
+        const statsRes = await api.get('/stats/');
         statsData = statsRes.data || {};
       } catch (err) {
         console.warn('Stats API error, using default values:', err.message);
