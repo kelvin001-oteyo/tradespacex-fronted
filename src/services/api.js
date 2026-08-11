@@ -11,12 +11,10 @@ const API_BASE_URL =
   import.meta.env.MODE === 'development'
     ? ''
     : (import.meta.env.VITE_API_URL ||
-      'https://tradespacex-backend.onrender.com');
+      'https://tradespacex-backend.onrender.com/api/v1');  // ✅ Include /api/v1 here
 
-// Add /api/v1 only once
-const API_URL = API_BASE_URL
-  ? `${API_BASE_URL}/api/v1`
-  : '/api/v1';
+// No need to add /api/v1 again
+const API_URL = API_BASE_URL || '/api/v1';
 
 console.log('🔵 API Base URL:', API_URL);
 
@@ -140,7 +138,7 @@ api.interceptors.response.use(
 
         if (refreshToken) {
           const response = await axios.post(
-            `${API_URL}/accounts/refresh-token/`,
+            `${API_URL}/accounts/refresh/`,  // ✅ Fixed endpoint
             {
               refresh: refreshToken,
             }
