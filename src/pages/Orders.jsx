@@ -25,7 +25,8 @@ import {
   Download,
   RefreshCw,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Building
 } from 'lucide-react';
 
 export default function Orders() {
@@ -101,7 +102,8 @@ export default function Orders() {
       if (filters.date_to) params.append('date_to', filters.date_to);
       if (filters.sort_by) params.append('ordering', filters.sort_by);
       
-      const response = await api.get(`/api/v1/orders/?${params.toString()}`);
+      // ✅ FIXED: Removed /api/v1/ from endpoint
+      const response = await api.get(`/orders/?${params.toString()}`);
       
       // Handle paginated response
       const data = response.data;
@@ -513,6 +515,16 @@ export default function Orders() {
                                   <div>
                                     <p className="text-sm font-medium text-ink">{item.product_name || 'Product'}</p>
                                     <p className="text-xs text-slate-500">Qty: {item.quantity || 1}</p>
+                                    {/* Supplier link in order items */}
+                                    {item.supplier_id && (
+                                      <Link 
+                                        to={`/suppliers/${item.supplier_id}`}
+                                        className="text-xs text-primary-600 hover:text-primary-700 transition-colors flex items-center gap-1 mt-0.5"
+                                      >
+                                        <Building className="w-3 h-3" />
+                                        {item.supplier_name || 'View Supplier'}
+                                      </Link>
+                                    )}
                                   </div>
                                 </div>
                                 <p className="text-sm font-semibold text-ink">
@@ -569,11 +581,11 @@ export default function Orders() {
                           </Link>
                           {order.status === 'shipped' && (
                             <Link
-                              to={`/shipments/track/${order.tracking_number}`}
+                              to={`/orders/${order.id}/track`}
                               className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-purple-600 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors"
                             >
                               <Truck className="w-4 h-4" />
-                              Track Shipment
+                              Track Order
                             </Link>
                           )}
                           {order.status === 'pending' && (
@@ -591,28 +603,6 @@ export default function Orders() {
             );
           })}
         </div>
-
-        // In Orders.jsx, add track link
-<Link 
-  to={`/orders/${order.id}/track`}
-  className="text-sm text-primary-600 hover:text-primary-700"
->
-  Track Order
-</Link>
-
-// In Orders.jsx - Order Item Row
-<div className="order-item">
-  <div className="order-item-details">
-    <p className="font-medium text-ink">{order.product_name}</p>
-    <Link 
-      to={`/suppliers/${order.supplier_id}`}
-      className="text-sm text-slate-500 hover:text-primary-600 transition-colors"
-    >
-      <Building className="w-3.5 h-3.5 inline mr-1" />
-      {order.supplier_name}
-    </Link>
-  </div>
-</div>
 
         {/* ====== PAGINATION ====== */}
         {pagination.pages > 1 && (
