@@ -64,7 +64,8 @@ export default function Cart() {
       if (isAuthenticated) {
         // If logged in, try to fetch from API
         try {
-          const response = await api.get('/api/cart/');
+          // ✅ FIXED: Removed /api/ from endpoint
+          const response = await api.get('/cart/');
           const cartData = response.data;
           if (cartData.items && cartData.items.length > 0) {
             setCartItems(cartData.items);
@@ -272,8 +273,8 @@ export default function Cart() {
         promo_code: promoApplied ? promoCode : null
       };
       
-      // Create order
-      const response = await api.post('/api/orders/', orderData);
+      // ✅ FIXED: Removed /api/ from endpoint
+      const response = await api.post('/orders/', orderData);
       const order = response.data;
       
       // Clear cart
