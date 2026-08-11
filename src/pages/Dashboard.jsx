@@ -67,19 +67,19 @@ export default function Dashboard() {
     setError(null);
     
     try {
-      // Fetch dashboard stats
-      const dashboardRes = await api.get('/api/dashboard/');
+      // ✅ FIXED: Removed /api/ from endpoint
+      const dashboardRes = await api.get('/dashboard/');
       const dashboard = dashboardRes.data;
       
-      // Fetch recent orders
-      const ordersRes = await api.get('/api/orders/', {
+      // ✅ FIXED: Removed /api/ from endpoint
+      const ordersRes = await api.get('/orders/', {
         params: { limit: 5 }
       });
       const rawOrders = ordersRes.data?.results || ordersRes.data || [];
       const orders = Array.isArray(rawOrders) ? rawOrders : [];
       
-      // Fetch notifications count
-      const notifRes = await api.get('/api/notifications/', {
+      // ✅ FIXED: Removed /api/ from endpoint
+      const notifRes = await api.get('/notifications/', {
         params: { unread_only: true, limit: 1 }
       });
       const unreadCount = notifRes.data.count || 0;
