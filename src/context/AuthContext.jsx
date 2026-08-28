@@ -101,11 +101,21 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password, rememberMe = false) => {
     try {
       const response = await api.post('/accounts/login/', {
-        email,
+        email: email.trim(),
         password
       });
 
-      const { access, refresh, user } = response.data;
+      const account = response.data.data;
+      const { access, refresh } = account.tokens;
+
+      const user = {
+        id: account.id,
+        email: account.email,
+        first_name: account.first_name,
+        last_name: account.last_name,
+        user_type: account.user_type
+      };
+
       storeTokens({ access, refresh }, rememberMe);
       setToken(access);
       setUser(user);
