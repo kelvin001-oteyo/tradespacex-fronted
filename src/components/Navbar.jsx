@@ -4,7 +4,8 @@ import { useAuth } from '../context/AuthContext';
 import { 
   Menu, X, Search, ShoppingCart, Bell, MessageCircle, 
   User, ChevronDown, Globe, Shield, Truck, Package,
-  LogOut, Settings, LayoutDashboard, Store, PlusCircle
+  LogOut, Settings, LayoutDashboard, Store, PlusCircle,
+  Home
 } from 'lucide-react';
 import './Navbar.css';
 
@@ -34,20 +35,21 @@ const Navigation = () => {
     setIsMobileMenuOpen(false);
   }, [location]);
 
-  // Navigation links configuration
+  // ============================================================
+  // CORE NAVIGATION - Focused on B2B trading journey
+  // ============================================================
   const navLinks = [
+    { name: 'Home', path: '/', icon: Home },
     { name: 'Marketplace', path: '/marketplace', icon: Store },
     { name: 'Suppliers', path: '/suppliers', icon: Globe },
-    { name: 'TradeSpace Express', path: '/tse', icon: Truck, badge: 'New' },
-    { name: 'About', path: '/about', icon: Shield },
+    { name: 'Orders', path: '/orders', icon: Package },
+    { name: 'Messages', path: '/messages', icon: MessageCircle },
   ];
 
   // User menu items (logged in)
   const userMenuItems = [
     { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
-    { name: 'My Orders', path: '/orders', icon: Package },
-    { name: 'My Products', path: '/products', icon: Store, role: 'supplier' },
-    { name: 'Messages', path: '/messages', icon: MessageCircle, badge: unreadMessages },
+    { name: 'Profile', path: '/profile', icon: User },
     { name: 'Settings', path: '/settings', icon: Settings },
     { divider: true },
     { name: 'Logout', path: '#', icon: LogOut, action: 'logout' },
@@ -60,7 +62,7 @@ const Navigation = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 md:h-20">
             
-            {/* Left: Logo & Brand */}
+            {/* ===== LEFT: Logo & Brand ===== */}
             <div className="flex items-center gap-2">
               <Link to="/" className="flex items-center gap-2 group">
                 <div className="relative">
@@ -74,13 +76,13 @@ const Navigation = () => {
                     TradespaceX
                   </span>
                   <span className="ml-1 text-xs font-medium text-primary-500 bg-primary-50 px-2 py-0.5 rounded-full">
-                    Trade Ecosystem
+                    B2B Trade
                   </span>
                 </div>
               </Link>
             </div>
 
-            {/* Center: Navigation Links (Desktop and tablet) */}
+            {/* ===== CENTER: Navigation Links ===== */}
             <div className="hidden md:flex items-center gap-1">
               {navLinks.map((link) => {
                 const isActive = location.pathname === link.path;
@@ -100,17 +102,12 @@ const Navigation = () => {
                   >
                     <Icon className="w-4 h-4" />
                     <span>{link.name}</span>
-                    {link.badge && (
-                      <span className="absolute -top-1 -right-1 text-[10px] font-bold text-white bg-gradient-to-r from-primary-500 to-secondary-500 px-1.5 py-0.5 rounded-full animate-pulse">
-                        {link.badge}
-                      </span>
-                    )}
                   </Link>
                 );
               })}
             </div>
 
-            {/* Right: Actions */}
+            {/* ===== RIGHT: Actions ===== */}
             <div className="flex items-center gap-2 md:gap-3">
               
               {/* Search Toggle (Mobile) */}
@@ -145,17 +142,9 @@ const Navigation = () => {
                 )}
               </Link>
 
-              {/* User Section */}
+              {/* ===== User Section ===== */}
               {user ? (
                 <>
-                  {/* Messages */}
-                  <Link to="/messages" className="relative p-2 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition-colors">
-                    <MessageCircle className="w-5 h-5" />
-                    {unreadMessages > 0 && (
-                      <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 rounded-full animate-ping"></span>
-                    )}
-                  </Link>
-
                   {/* Notifications */}
                   <button className="relative p-2 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition-colors">
                     <Bell className="w-5 h-5" />
@@ -168,8 +157,8 @@ const Navigation = () => {
                       onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
                       className="flex items-center gap-2 p-1.5 rounded-lg hover:bg-gray-100 transition-colors border-2 border-transparent hover:border-primary-200"
                     >
-                       <div className="w-8 h-8 rounded-full bg-gradient-to-r from-primary-500 to-secondary-500 flex items-center justify-center text-white text-sm font-bold">
-                        {user?.full_name?.charAt(0) || 'U'}
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-r from-primary-500 to-secondary-500 flex items-center justify-center text-white text-sm font-bold">
+                        {user?.full_name?.charAt(0) || user?.fullName?.charAt(0) || 'U'}
                       </div>
                       <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${isUserMenuOpen ? 'rotate-180' : ''}`} />
                     </button>
@@ -184,14 +173,12 @@ const Navigation = () => {
                         <div className="absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-2xl border border-gray-100 overflow-hidden z-50">
                           {/* User Info */}
                           <div className="px-4 py-3 bg-gradient-to-r from-primary-50 to-secondary-50 border-b border-gray-100">
-                           <p className="font-semibold text-gray-900">{user?.full_name || 'User'}</p>
-                           <p className="text-sm text-gray-500">{user?.email || ''}</p>
-                           {user?.account_type && (
-                             <span className="inline-flex items-center gap-1 mt-1 text-xs font-medium text-primary-700 bg-primary-100 px-2 py-0.5 rounded-full">
-                               <Shield className="w-3 h-3" />
-                               {user.account_type.charAt(0).toUpperCase() + user.account_type.slice(1)}
-                             </span>
-                           )}
+                            <p className="font-semibold text-gray-900">{user?.full_name || user?.fullName || 'User'}</p>
+                            <p className="text-sm text-gray-500">{user?.email || ''}</p>
+                            <span className="inline-flex items-center gap-1 mt-1 text-xs font-medium text-primary-700 bg-primary-100 px-2 py-0.5 rounded-full">
+                              <Shield className="w-3 h-3" />
+                              {user?.account_type || user?.accountType || 'Member'}
+                            </span>
                           </div>
 
                           {/* Menu Items */}
@@ -200,20 +187,19 @@ const Navigation = () => {
                               if (item.divider) {
                                 return <div key={index} className="border-t border-gray-100 my-1"></div>;
                               }
-                              if (item.role && user?.account_type !== item.role) return null;
                               
                               const Icon = item.icon;
                               const isActive = location.pathname === item.path;
                               
                               if (item.action === 'logout') {
                                 return (
-                                   <button
-                                     key={index}
-                                     onClick={async () => {
-                                       setIsUserMenuOpen(false);
-                                       await logout();
-                                       navigate('/login');
-                                     }}
+                                  <button
+                                    key={index}
+                                    onClick={async () => {
+                                      setIsUserMenuOpen(false);
+                                      await logout();
+                                      navigate('/login');
+                                    }}
                                     className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors"
                                   >
                                     <Icon className="w-4 h-4" />
@@ -237,22 +223,18 @@ const Navigation = () => {
                                 >
                                   <Icon className="w-4 h-4" />
                                   <span>{item.name}</span>
-                                  {item.badge && (
-                                    <span className="ml-auto text-xs font-medium text-white bg-red-500 px-2 py-0.5 rounded-full">
-                                      {item.badge}
-                                    </span>
-                                  )}
                                 </Link>
                               );
                             })}
                           </div>
 
-                          {/* Quick Actions */}
-                          {user?.account_type === 'supplier' && (
+                          {/* Quick Action: List Product (for suppliers) */}
+                          {(user?.account_type === 'supplier' || user?.accountType === 'supplier') && (
                             <div className="border-t border-gray-100 p-2">
                               <Link
                                 to="/products/new"
                                 className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-primary-500 to-secondary-500 text-white text-sm font-medium rounded-lg hover:shadow-lg transition-all"
+                                onClick={() => setIsUserMenuOpen(false)}
                               >
                                 <PlusCircle className="w-4 h-4" />
                                 List New Product
@@ -265,6 +247,7 @@ const Navigation = () => {
                   </div>
                 </>
               ) : (
+                // ===== Not Logged In =====
                 <div className="flex items-center gap-2">
                   <Link 
                     to="/login" 
@@ -310,7 +293,7 @@ const Navigation = () => {
         </div>
       </nav>
 
-      {/* Mobile Menu (Slide-in) */}
+      {/* ===== MOBILE MENU (Slide-in) ===== */}
       <div className={`
         lg:hidden fixed inset-0 z-40 transition-all duration-300
         ${isMobileMenuOpen ? 'visible' : 'invisible'}
@@ -361,11 +344,6 @@ const Navigation = () => {
                   >
                     <Icon className="w-5 h-5" />
                     <span>{link.name}</span>
-                    {link.badge && (
-                      <span className="ml-auto text-xs font-bold text-white bg-gradient-to-r from-primary-500 to-secondary-500 px-2 py-0.5 rounded-full">
-                        {link.badge}
-                      </span>
-                    )}
                   </Link>
                 );
               })}
@@ -376,7 +354,6 @@ const Navigation = () => {
               <div className="border-t border-gray-100 pt-4 space-y-1">
                 {userMenuItems.map((item, index) => {
                   if (item.divider) return <div key={index} className="border-t border-gray-100 my-2"></div>;
-                  if (item.role && user?.account_type !== item.role) return null;
                   
                   const Icon = item.icon;
                   if (item.action === 'logout') {
@@ -404,11 +381,6 @@ const Navigation = () => {
                     >
                       <Icon className="w-4 h-4" />
                       <span>{item.name}</span>
-                      {item.badge && (
-                        <span className="ml-auto text-xs font-medium text-white bg-red-500 px-2 py-0.5 rounded-full">
-                          {item.badge}
-                        </span>
-                      )}
                     </Link>
                   );
                 })}
