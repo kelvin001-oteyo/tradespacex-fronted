@@ -122,17 +122,30 @@ export default function Products() {
       if (filters.status) params.append('status', filters.status);
       if (filters.sort_by) params.append('ordering', filters.sort_by);
       
-      // ✅ FIXED: Removed /api/ from endpoint
       const response = await api.get(`/marketplace/products/?${params.toString()}`);
       
+      // ✅ FIXED: Safely extract products array from response
       const data = response.data;
-      setProducts(data.results || data);
+      let productList = [];
+
+      if (Array.isArray(data)) {
+        productList = data;
+      } else if (Array.isArray(data.results)) {
+        productList = data.results;
+      } else if (Array.isArray(data.products)) {
+        productList = data.products;
+      }
+
+      setProducts(productList);
+
+      const totalCount = typeof data.count === 'number' ? data.count : productList.length;
+
       setPagination({
-        count: data.count || data.length || 0,
-        next: data.next,
-        previous: data.previous,
+        count: totalCount,
+        next: data.next || null,
+        previous: data.previous || null,
         page: pagination.page,
-        pages: Math.ceil((data.count || data.length || 0) / pagination.limit),
+        pages: Math.max(1, Math.ceil(totalCount / pagination.limit)),
         limit: pagination.limit
       });
       
@@ -150,7 +163,6 @@ export default function Products() {
 
   const fetchCategories = async () => {
     try {
-      // ✅ FIXED: Removed /api/ from endpoint
       const response = await api.get('/marketplace/categories/');
       setCategories(response.data.results || response.data || []);
     } catch (err) {
@@ -182,7 +194,6 @@ export default function Products() {
     if (!productToDelete) return;
     
     try {
-      // ✅ FIXED: Removed /api/ from endpoint
       await api.delete(`/marketplace/products/${productToDelete.id}/`);
       setProducts(products.filter(p => p.id !== productToDelete.id));
       setShowDeleteModal(false);
@@ -198,7 +209,6 @@ export default function Products() {
     if (!productToUpdate) return;
     
     try {
-      // ✅ FIXED: Removed /api/ from endpoint
       const response = await api.patch(`/marketplace/products/${productToUpdate.id}/`, {
         status: productToUpdate.newStatus
       });
