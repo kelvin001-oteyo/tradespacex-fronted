@@ -123,13 +123,30 @@ api.interceptors.response.use(
     const originalRequest = error.config;
 
     // --------------------------------------------------
+    // ENDPOINTS THAT SHOULD NEVER TRIGGER A REFRESH
+    // A 401 from login/register/refresh itself means bad
+    // credentials or a dead refresh token — not an expired
+    // access token on an otherwise-authenticated request.
+    // --------------------------------------------------
+    const AUTH_ENDPOINTS = [
+      '/accounts/login/',
+      '/accounts/register/',
+      '/accounts/refresh/',
+    ];
+
+    const isAuthEndpoint = AUTH_ENDPOINTS.some((path) =>
+      originalRequest?.url?.includes(path)
+    );
+
+    // --------------------------------------------------
     // TOKEN REFRESH
     // --------------------------------------------------
 
     if (
       error.response?.status === 401 &&
       originalRequest &&
-      !originalRequest._retry
+      !originalRequest._retry &&
+      !isAuthEndpoint
     ) {
       originalRequest._retry = true;
 
