@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import Navbar from '../components/Navbar';
 import Stamp from '../components/Stamp';
 import './Dashboard.css';
-import api from '../services/api'; // Your axios instance
+import api from '../services/api';
 import { 
   Package, 
   ShoppingBag, 
@@ -37,7 +37,6 @@ export default function Dashboard() {
   // State
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [dashboardData, setDashboardData] = useState(null);
   const [recentOrders, setRecentOrders] = useState([]);
   const [stats, setStats] = useState({
     totalOrders: 0,
@@ -67,46 +66,76 @@ export default function Dashboard() {
     setError(null);
     
     try {
-      // ✅ FIXED: Removed /api/ from endpoint
-      const dashboardRes = await api.get('/dashboard/');
-      const dashboard = dashboardRes.data;
-      
-      // ✅ FIXED: Removed /api/ from endpoint
+      // ✅ FIXED: Calculate dashboard data from existing endpoints
+      // Fetch orders
       const ordersRes = await api.get('/orders/', {
-        params: { limit: 5 }
+        params: { limit: 100 }
       });
-      const rawOrders = ordersRes.data?.results || ordersRes.data || [];
-      const orders = Array.isArray(rawOrders) ? rawOrders : [];
       
-      // ✅ FIXED: Removed /api/ from endpoint
-      const notifRes = await api.get('/notifications/', {
-        params: { unread_only: true, limit: 1 }
-      });
-      const unreadCount = notifRes.data.count || 0;
-      
-      // Calculate derived stats
+      const ordersData = ordersRes.data;
+      let orders = [];
+
+      if (Array.isArray(ordersData)) {
+        orders = ordersData;
+      } else if (Array.isArray(ordersData.results)) {
+        orders = ordersData.results;
+      }
+
+      // Calculate order statistics
       const orderStats = calculateOrderStats(orders);
       
+      // Get total orders count
+      const totalOrders = typeof ordersData.count === 'number' 
+        ? ordersData.count 
+        : orders.length;
+
+      // Fetch notifications (optional - if endpoint exists)
+      let unreadCount = 0;
+      try {
+        const notifRes = await api.get('/notifications/', {
+          params: { unread_only: true, limit: 1 }
+        });
+        unreadCount = notifRes.data?.count || 0;
+      } catch (notifErr) {
+        // Notifications endpoint might not exist yet - that's fine
+        console.debug('Notifications endpoint not available yet');
+      }
+
+      // Calculate additional stats from orders
+      const totalRevenue = orders.reduce((sum, order) => {
+        return sum + (Number(order.total_amount) || Number(order.amount) || 0);
+      }, 0);
+
+      // Count products from orders (approximate)
+      const productSet = new Set();
+      orders.forEach(order => {
+        if (order.items && Array.isArray(order.items)) {
+          order.items.forEach(item => {
+            if (item.product_id) productSet.add(item.product_id);
+          });
+        }
+      });
+
+      // Update stats
       setStats({
-        totalOrders: dashboard.total_orders || 0,
+        totalOrders: totalOrders,
         pendingOrders: orderStats.pending,
         shippedOrders: orderStats.shipped,
         deliveredOrders: orderStats.delivered,
-        totalProducts: dashboard.total_products || 0,
-        totalMessages: dashboard.total_messages || 0,
+        totalProducts: productSet.size || 0,
+        totalMessages: 0,
         unreadMessages: unreadCount,
-        totalShipments: dashboard.total_shipments || 0,
-        activeShipments: dashboard.active_shipments || 0,
-        totalRevenue: dashboard.total_revenue || 0,
-        totalReviews: dashboard.total_reviews || 0,
-        averageRating: dashboard.average_rating || 0,
+        totalShipments: orderStats.shipped + orderStats.delivered,
+        activeShipments: orderStats.shipped,
+        totalRevenue: totalRevenue,
+        totalReviews: 0,
+        averageRating: 0,
         verificationStatus: user?.isBusinessVerified || false,
-        accountAge: dashboard.account_age || '0 years',
-        lastLogin: dashboard.last_login || 'Just now'
+        accountAge: calculateAccountAge(user?.created_at),
+        lastLogin: user?.last_login ? formatRelativeTime(user.last_login) : 'Just now'
       });
       
       setRecentOrders(orders.slice(0, 5));
-      setDashboardData(dashboard);
       
     } catch (err) {
       console.error('Error fetching dashboard:', err);
@@ -127,12 +156,46 @@ export default function Dashboard() {
     const stats = { pending: 0, shipped: 0, delivered: 0, cancelled: 0 };
     orders.forEach(order => {
       const status = order.status?.toLowerCase() || '';
-      if (status === 'pending') stats.pending++;
+      if (status === 'pending' || status === 'awaiting_payment') stats.pending++;
       else if (status === 'shipped' || status === 'processing') stats.shipped++;
       else if (status === 'delivered' || status === 'completed') stats.delivered++;
-      else if (status === 'cancelled') stats.cancelled++;
+      else if (status === 'cancelled' || status === 'refunded') stats.cancelled++;
     });
     return stats;
+  };
+
+  // Helper: Calculate account age
+  const calculateAccountAge = (createdAt) => {
+    if (!createdAt) return '0 years';
+    const created = new Date(createdAt);
+    const now = new Date();
+    const years = now.getFullYear() - created.getFullYear();
+    const months = now.getMonth() - created.getMonth();
+    
+    if (years > 0) {
+      return `${years} year${years > 1 ? 's' : ''}`;
+    } else if (months > 0) {
+      return `${months} month${months > 1 ? 's' : ''}`;
+    } else {
+      return 'Less than a month';
+    }
+  };
+
+  // Helper: Format relative time
+  const formatRelativeTime = (dateString) => {
+    if (!dateString) return 'Just now';
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now - date;
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+    
+    if (diffMins < 1) return 'Just now';
+    if (diffMins < 60) return `${diffMins}m ago`;
+    if (diffHours < 24) return `${diffHours}h ago`;
+    if (diffDays < 7) return `${diffDays}d ago`;
+    return date.toLocaleDateString();
   };
 
   // Quick actions based on user role
