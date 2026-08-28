@@ -102,18 +102,30 @@ export default function Orders() {
       if (filters.date_to) params.append('date_to', filters.date_to);
       if (filters.sort_by) params.append('ordering', filters.sort_by);
       
-      // ✅ FIXED: Removed /api/v1/ from endpoint
       const response = await api.get(`/orders/?${params.toString()}`);
       
-      // Handle paginated response
+      // ✅ FIXED: Safely extract orders array from response
       const data = response.data;
-      setOrders(data.results || data);
+      let orderList = [];
+
+      if (Array.isArray(data)) {
+        orderList = data;
+      } else if (Array.isArray(data.results)) {
+        orderList = data.results;
+      } else if (Array.isArray(data.orders)) {
+        orderList = data.orders;
+      }
+
+      setOrders(orderList);
+
+      const totalCount = typeof data.count === 'number' ? data.count : orderList.length;
+
       setPagination({
-        count: data.count || data.length || 0,
-        next: data.next,
-        previous: data.previous,
+        count: totalCount,
+        next: data.next || null,
+        previous: data.previous || null,
         page: pagination.page,
-        pages: Math.ceil((data.count || data.length || 0) / pagination.limit),
+        pages: Math.max(1, Math.ceil(totalCount / pagination.limit)),
         limit: pagination.limit
       });
       
@@ -122,7 +134,6 @@ export default function Orders() {
       setError(err.response?.data?.message || 'Failed to load orders');
       
       if (err.response?.status === 401) {
-        // Handle unauthorized
         navigate('/login');
       }
     } finally {
@@ -133,7 +144,7 @@ export default function Orders() {
   // Handle filter change
   const handleFilterChange = (key, value) => {
     setFilters(prev => ({ ...prev, [key]: value }));
-    setPagination(prev => ({ ...prev, page: 1 })); // Reset to first page
+    setPagination(prev => ({ ...prev, page: 1 }));
   };
 
   // Handle status filter (quick filter buttons)
