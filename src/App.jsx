@@ -37,7 +37,7 @@ import PlaceholderPage from './pages/PlaceholderPage';
 export default function App() {
   return (
     <Routes>
-      {/* ✅ All routes wrapped in Layout */}
+      {/* ✅ All routes wrapped in Layout - Navbar appears on all pages */}
       <Route element={<Layout />}>
         
         {/* ===== PUBLIC ROUTES ===== */}
